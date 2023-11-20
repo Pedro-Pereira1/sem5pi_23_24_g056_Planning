@@ -189,3 +189,69 @@ conta([elev(_,_)|L],NElev,NCor):- conta(L,NElevL,NCor),NElev is NElevL+1.
 conta([cor(_,_)|L],NElev,NCor):-conta(L,NElev,NCorL),NCor is NCorL+1.
 
 %===========================================================================================================
+% Cria o grafo de ligacoes entre celulas (celulas com 0 estão ligadas a celulas com 0) == cria_grafo(8,7).
+
+cria_grafo(_,0):-!.
+cria_grafo(Col,Lin):-cria_grafo_lin(Col,Lin),Lin1 is Lin-1,cria_grafo(Col,Lin1).
+
+
+cria_grafo_lin(0,_):-!.
+cria_grafo_lin(Col,Lin):-m(Col,Lin,0),!,ColS is Col+1, ColA is Col-1, LinS is Lin+1,LinA is Lin-1,
+    ((m(ColS,Lin,0),assertz(ligacel(cel(Col,Lin),cel(ColS,Lin)));true)),
+    ((m(ColA,Lin,0),assertz(ligacel(cel(Col,Lin),cel(ColA,Lin)));true)),
+    ((m(Col,LinS,0),assertz(ligacel(cel(Col,Lin),cel(Col,LinS)));true)),
+    ((m(Col,LinA,0),assertz(ligacel(cel(Col,Lin),cel(Col,LinA)));true)),
+    Col1 is Col-1,
+    cria_grafo_lin(Col1,Lin).
+cria_grafo_lin(Col,Lin):-Col1 is Col-1,cria_grafo_lin(Col1,Lin).
+
+%===========================================================================================================
+% Deep First Search (DFS) == dfs(cel(1,3),cel(6,7),L).
+
+dfs(Orig,Dest,Cam):-
+	dfs2(Orig,Dest,[Orig],Cam).
+
+dfs2(Dest,Dest,LA,Cam):-
+	reverse(LA,Cam).
+
+dfs2(Act,Dest,LA,Cam):-
+	ligacel(Act,X),
+        \+ member(X,LA),
+	dfs2(X,Dest,[X|LA],Cam).
+
+%===========================================================================================================
+% All Deep First Search (DFS) == all_dfs(cel(1,3),cel(6,7),L).
+
+all_dfs(Orig,Dest,LCam):-
+	findall(Cam,dfs(Orig,Dest,Cam),LCam).
+
+%===========================================================================================================
+% Best Deep First Search (DFS) == better_dfs(cel(1,3),cel(6,7),L).
+
+better_dfs(Orig,Dest,Cam):-
+	all_dfs(Orig,Dest,LCam),
+	shortlist(LCam,Cam,_).
+
+
+shortlist([L],L,N):-!,length(L,N).
+
+shortlist([L|LL],Lm,Nm):-shortlist(LL,Lm1,Nm1),
+				length(L,NL),
+			((NL<Nm1,!,Lm=L,Nm is NL);(Lm=Lm1,Nm is Nm1)).
+
+
+%===========================================================================================================
+% Breadth First Search (BFS) == bfs(cel(1,3),cel(6,7),L).
+
+bfs(Orig,Dest,Cam):-bfs2(Dest,[[Orig]],Cam).
+
+bfs2(Dest,[[Dest|T]|_],Cam):-
+	reverse([Dest|T],Cam).
+
+bfs2(Dest,[LA|Outros],Cam):-
+	LA=[Act|_],
+	findall([X|LA],
+		(Dest\==Act,ligacel(Act,X),\+ member(X,LA)),
+		Novos),
+	append(Outros,Novos,Todos),
+	bfs2(Dest,Todos,Cam).
