@@ -137,7 +137,14 @@ ponto_acesso(d201,d2,cel(7,7)).
 %===========================================================================================================
 % Mapa de piso
 
-:-dynamic ligacel/2.
+
+:-dynamic node/4. % node(Id, Col, Lin, Valor, Piso)...
+:-dynamic edge/4. % edge(Id1, Id2, Custo, Piso)...
+:-dynamic cel/2. % cel(col, lin)...
+:-dynamic ponto_acesso/3. % ponto_acesso(ponto, piso, cel(col, lin))...
+:-dynamic lens/3. % lens(piso, col, lin)...
+
+
 
 %coluna :1,2,3,4,5,6,7,8
 %linha 1:1,1,1,1,1,1,1,1
@@ -151,320 +158,321 @@ ponto_acesso(d201,d2,cel(7,7)).
 %
 %
 %m(col,lin,valor,Piso)
-m(1,1,1,a1).
-m(2,1,1,a1).
-m(3,1,1,a1).
-m(4,1,1,a1).
-m(5,1,1,a1).
-m(6,1,1,a1).
-m(7,1,1,a1).
-m(8,1,1,a1).
+node(1,1,1,a1).
+node(2,1,1,a1).
+node(3,1,1,a1).
+node(4,1,1,a1).
+node(5,1,1,a1).
+node(6,1,1,a1).
+node(7,1,1,a1).
+node(8,1,1,a1).
 
-m(1,2,0,a1).
-m(2,2,0,a1).
-m(3,2,0,a1).
-m(4,2,0,a1).
-m(5,2,0,a1).
-m(6,2,0,a1).
-m(7,2,0,a1).
-m(8,2,1,a1).
+node(1,2,0,a1).
+node(2,2,0,a1).
+node(3,2,0,a1).
+node(4,2,0,a1).
+node(5,2,0,a1).
+node(6,2,0,a1).
+node(7,2,0,a1).
+node(8,2,1,a1).
 
-m(1,3,0,a1).
-m(2,3,0,a1).
-m(3,3,0,a1).
-m(4,3,0,a1).
-m(5,3,0,a1).
-m(6,3,0,a1).
-m(7,3,0,a1).
-m(8,3,1,a1).
+node(1,3,0,a1).
+node(2,3,0,a1).
+node(3,3,0,a1).
+node(4,3,0,a1).
+node(5,3,0,a1).
+node(6,3,0,a1).
+node(7,3,0,a1).
+node(8,3,1,a1).
 
-m(1,4,0,a1).
-m(2,4,0,a1).
-m(3,4,0,a1).
-m(4,4,0,a1).
-m(5,4,0,a1).
-m(6,4,0,a1).
-m(7,4,0,a1).
-m(8,4,1,a1).
+node(1,4,0,a1).
+node(2,4,0,a1).
+node(3,4,0,a1).
+node(4,4,0,a1).
+node(5,4,0,a1).
+node(6,4,0,a1).
+node(7,4,0,a1).
+node(8,4,1,a1).
 
-m(1,5,1,a1).
-m(2,5,1,a1).
-m(3,5,1,a1).
-m(4,5,1,a1).
-m(5,5,0,a1).
-m(6,5,0,a1).
-m(7,5,0,a1).
-m(8,5,1,a1).
+node(1,5,1,a1).
+node(2,5,1,a1).
+node(3,5,1,a1).
+node(4,5,1,a1).
+node(5,5,0,a1).
+node(6,5,0,a1).
+node(7,5,0,a1).
+node(8,5,1,a1).
 
-m(1,6,1,a1).
-m(2,6,1,a1).
-m(3,6,1,a1).
-m(4,6,1,a1).
-m(5,6,0,a1).
-m(6,6,0,a1).
-m(7,6,0,a1).
-m(8,6,1,a1).
+node(1,6,1,a1).
+node(2,6,1,a1).
+node(3,6,1,a1).
+node(4,6,1,a1).
+node(5,6,0,a1).
+node(6,6,0,a1).
+node(7,6,0,a1).
+node(8,6,1,a1).
 
-m(1,7,1,a1).
-m(2,7,1,a1).
-m(3,7,1,a1).
-m(4,7,1,a1).
-m(5,7,0,a1).
-m(6,7,0,a1).
-m(7,7,0,a1).
-m(8,7,1,a1).
+node(1,7,1,a1).
+node(2,7,1,a1).
+node(3,7,1,a1).
+node(4,7,1,a1).
+node(5,7,0,a1).
+node(6,7,0,a1).
+node(7,7,0,a1).
+node(8,7,1,a1).
 
-m(1,1,1,a2).
-m(2,1,1,a2).
-m(3,1,1,a2).
-m(4,1,1,a2).
-m(5,1,1,a2).
-m(6,1,1,a2).
-m(7,1,1,a2).
-m(8,1,1,a2).
+node(1,1,1,a2).
+node(2,1,1,a2).
+node(3,1,1,a2).
+node(4,1,1,a2).
+node(5,1,1,a2).
+node(6,1,1,a2).
+node(7,1,1,a2).
+node(8,1,1,a2).
 
-m(1,2,0,a2).
-m(2,2,0,a2).
-m(3,2,0,a2).
-m(4,2,0,a2).
-m(5,2,0,a2).
-m(6,2,0,a2).
-m(7,2,0,a2).
-m(8,2,1,a2).
+node(1,2,0,a2).
+node(2,2,0,a2).
+node(3,2,0,a2).
+node(4,2,0,a2).
+node(5,2,0,a2).
+node(6,2,0,a2).
+node(7,2,0,a2).
+node(8,2,1,a2).
 
-m(1,3,0,a2).
-m(2,3,0,a2).
-m(3,3,0,a2).
-m(4,3,0,a2).
-m(5,3,0,a2).
-m(6,3,0,a2).
-m(7,3,0,a2).
-m(8,3,1,a2).
+node(1,3,0,a2).
+node(2,3,0,a2).
+node(3,3,0,a2).
+node(4,3,0,a2).
+node(5,3,0,a2).
+node(6,3,0,a2).
+node(7,3,0,a2).
+node(8,3,1,a2).
 
-m(1,4,0,a2).
-m(2,4,0,a2).
-m(3,4,0,a2).
-m(4,4,0,a2).
-m(5,4,0,a2).
-m(6,4,0,a2).
-m(7,4,0,a2).
-m(8,4,1,a2).
+node(1,4,0,a2).
+node(2,4,0,a2).
+node(3,4,0,a2).
+node(4,4,0,a2).
+node(5,4,0,a2).
+node(6,4,0,a2).
+node(7,4,0,a2).
+node(8,4,1,a2).
 
-m(1,5,1,a2).
-m(2,5,1,a2).
-m(3,5,1,a2).
-m(4,5,1,a2).
-m(5,5,0,a2).
-m(6,5,0,a2).
-m(7,5,0,a2).
-m(8,5,1,a2).
+node(1,5,1,a2).
+node(2,5,1,a2).
+node(3,5,1,a2).
+node(4,5,1,a2).
+node(5,5,0,a2).
+node(6,5,0,a2).
+node(7,5,0,a2).
+node(8,5,1,a2).
 
-m(1,6,1,a2).
-m(2,6,1,a2).
-m(3,6,1,a2).
-m(4,6,1,a2).
-m(5,6,0,a2).
-m(6,6,0,a2).
-m(7,6,0,a2).
-m(8,6,1,a2).
+node(1,6,1,a2).
+node(2,6,1,a2).
+node(3,6,1,a2).
+node(4,6,1,a2).
+node(5,6,0,a2).
+node(6,6,0,a2).
+node(7,6,0,a2).
+node(8,6,1,a2).
 
-m(1,7,1,a2).
-m(2,7,1,a2).
-m(3,7,1,a2).
-m(4,7,1,a2).
-m(5,7,0,a2).
-m(6,7,0,a2).
-m(7,7,0,a2).
-m(8,7,1,a2).
+node(1,7,1,a2).
+node(2,7,1,a2).
+node(3,7,1,a2).
+node(4,7,1,a2).
+node(5,7,0,a2).
+node(6,7,0,a2).
+node(7,7,0,a2).
+node(8,7,1,a2).
 
-m(1,1,1,b2).
-m(2,1,1,b2).
-m(3,1,1,b2).
-m(4,1,1,b2).
-m(5,1,1,b2).
-m(6,1,1,b2).
-m(7,1,1,b2).
-m(8,1,1,b2).
+node(1,1,1,b2).
+node(2,1,1,b2).
+node(3,1,1,b2).
+node(4,1,1,b2).
+node(5,1,1,b2).
+node(6,1,1,b2).
+node(7,1,1,b2).
+node(8,1,1,b2).
 
-m(1,2,0,b2).
-m(2,2,0,b2).
-m(3,2,0,b2).
-m(4,2,0,b2).
-m(5,2,0,b2).
-m(6,2,0,b2).
-m(7,2,0,b2).
-m(8,2,1,b2).
+node(1,2,0,b2).
+node(2,2,0,b2).
+node(3,2,0,b2).
+node(4,2,0,b2).
+node(5,2,0,b2).
+node(6,2,0,b2).
+node(7,2,0,b2).
+node(8,2,1,b2).
 
-m(1,3,0,b2).
-m(2,3,0,b2).
-m(3,3,0,b2).
-m(4,3,0,b2).
-m(5,3,0,b2).
-m(6,3,0,b2).
-m(7,3,0,b2).
-m(8,3,1,b2).
+node(1,3,0,b2).
+node(2,3,0,b2).
+node(3,3,0,b2).
+node(4,3,0,b2).
+node(5,3,0,b2).
+node(6,3,0,b2).
+node(7,3,0,b2).
+node(8,3,1,b2).
 
-m(1,4,0,b2).
-m(2,4,0,b2).
-m(3,4,0,b2).
-m(4,4,0,b2).
-m(5,4,0,b2).
-m(6,4,0,b2).
-m(7,4,0,b2).
-m(8,4,1,b2).
+node(1,4,0,b2).
+node(2,4,0,b2).
+node(3,4,0,b2).
+node(4,4,0,b2).
+node(5,4,0,b2).
+node(6,4,0,b2).
+node(7,4,0,b2).
+node(8,4,1,b2).
 
-m(1,5,1,b2).
-m(2,5,1,b2).
-m(3,5,1,b2).
-m(4,5,1,b2).
-m(5,5,0,b2).
-m(6,5,0,b2).
-m(7,5,0,b2).
-m(8,5,1,b2).
+node(1,5,1,b2).
+node(2,5,1,b2).
+node(3,5,1,b2).
+node(4,5,1,b2).
+node(5,5,0,b2).
+node(6,5,0,b2).
+node(7,5,0,b2).
+node(8,5,1,b2).
 
-m(1,6,1,b2).
-m(2,6,1,b2).
-m(3,6,1,b2).
-m(4,6,1,b2).
-m(5,6,0,b2).
-m(6,6,0,b2).
-m(7,6,0,b2).
-m(8,6,1,b2).
+node(1,6,1,b2).
+node(2,6,1,b2).
+node(3,6,1,b2).
+node(4,6,1,b2).
+node(5,6,0,b2).
+node(6,6,0,b2).
+node(7,6,0,b2).
+node(8,6,1,b2).
 
-m(1,7,1,b2).
-m(2,7,1,b2).
-m(3,7,1,b2).
-m(4,7,1,b2).
-m(5,7,0,b2).
-m(6,7,0,b2).
-m(7,7,0,b2).
-m(8,7,1,b2).
+node(1,7,1,b2).
+node(2,7,1,b2).
+node(3,7,1,b2).
+node(4,7,1,b2).
+node(5,7,0,b2).
+node(6,7,0,b2).
+node(7,7,0,b2).
+node(8,7,1,b2).
 
-m(1,1,1,c2).
-m(2,1,1,c2).
-m(3,1,1,c2).
-m(4,1,1,c2).
-m(5,1,1,c2).
-m(6,1,1,c2).
-m(7,1,1,c2).
-m(8,1,1,c2).
+node(1,1,1,c2).
+node(2,1,1,c2).
+node(3,1,1,c2).
+node(4,1,1,c2).
+node(5,1,1,c2).
+node(6,1,1,c2).
+node(7,1,1,c2).
+node(8,1,1,c2).
 
-m(1,2,0,c2).
-m(2,2,0,c2).
-m(3,2,0,c2).
-m(4,2,0,c2).
-m(5,2,0,c2).
-m(6,2,0,c2).
-m(7,2,0,c2).
-m(8,2,1,c2).
+node(1,2,0,c2).
+node(2,2,0,c2).
+node(3,2,0,c2).
+node(4,2,0,c2).
+node(5,2,0,c2).
+node(6,2,0,c2).
+node(7,2,0,c2).
+node(8,2,1,c2).
 
-m(1,3,0,c2).
-m(2,3,0,c2).
-m(3,3,0,c2).
-m(4,3,0,c2).
-m(5,3,0,c2).
-m(6,3,0,c2).
-m(7,3,0,c2).
-m(8,3,1,c2).
+node(1,3,0,c2).
+node(2,3,0,c2).
+node(3,3,0,c2).
+node(4,3,0,c2).
+node(5,3,0,c2).
+node(6,3,0,c2).
+node(7,3,0,c2).
+node(8,3,1,c2).
 
-m(1,4,0,c2).
-m(2,4,0,c2).
-m(3,4,0,c2).
-m(4,4,0,c2).
-m(5,4,0,c2).
-m(6,4,0,c2).
-m(7,4,0,c2).
-m(8,4,1,c2).
+node(1,4,0,c2).
+node(2,4,0,c2).
+node(3,4,0,c2).
+node(4,4,0,c2).
+node(5,4,0,c2).
+node(6,4,0,c2).
+node(7,4,0,c2).
+node(8,4,1,c2).
 
-m(1,5,1,c2).
-m(2,5,1,c2).
-m(3,5,1,c2).
-m(4,5,1,c2).
-m(5,5,0,c2).
-m(6,5,0,c2).
-m(7,5,0,c2).
-m(8,5,1,c2).
+node(1,5,1,c2).
+node(2,5,1,c2).
+node(3,5,1,c2).
+node(4,5,1,c2).
+node(5,5,0,c2).
+node(6,5,0,c2).
+node(7,5,0,c2).
+node(8,5,1,c2).
 
-m(1,6,1,c2).
-m(2,6,1,c2).
-m(3,6,1,c2).
-m(4,6,1,c2).
-m(5,6,0,c2).
-m(6,6,0,c2).
-m(7,6,0,c2).
-m(8,6,1,c2).
+node(1,6,1,c2).
+node(2,6,1,c2).
+node(3,6,1,c2).
+node(4,6,1,c2).
+node(5,6,0,c2).
+node(6,6,0,c2).
+node(7,6,0,c2).
+node(8,6,1,c2).
 
-m(1,7,1,c2).
-m(2,7,1,c2).
-m(3,7,1,c2).
-m(4,7,1,c2).
-m(5,7,0,c2).
-m(6,7,0,c2).
-m(7,7,0,c2).
-m(8,7,1,c2).
+node(1,7,1,c2).
+node(2,7,1,c2).
+node(3,7,1,c2).
+node(4,7,1,c2).
+node(5,7,0,c2).
+node(6,7,0,c2).
+node(7,7,0,c2).
+node(8,7,1,c2).
 
-m(1,1,1,d2).
-m(2,1,1,d2).
-m(3,1,1,d2).
-m(4,1,1,d2).
-m(5,1,1,d2).
-m(6,1,1,d2).
-m(7,1,1,d2).
-m(8,1,1,d2).
+node(1,1,1,d2).
+node(2,1,1,d2).
+node(3,1,1,d2).
+node(4,1,1,d2).
+node(5,1,1,d2).
+node(6,1,1,d2).
+node(7,1,1,d2).
+node(8,1,1,d2).
 
-m(1,2,0,d2).
-m(2,2,0,d2).
-m(3,2,0,d2).
-m(4,2,0,d2).
-m(5,2,0,d2).
-m(6,2,0,d2).
-m(7,2,0,d2).
-m(8,2,1,d2).
+node(1,2,0,d2).
+node(2,2,0,d2).
+node(3,2,0,d2).
+node(4,2,0,d2).
+node(5,2,0,d2).
+node(6,2,0,d2).
+node(7,2,0,d2).
+node(8,2,1,d2).
 
-m(1,3,0,d2).
-m(2,3,0,d2).
-m(3,3,0,d2).
-m(4,3,0,d2).
-m(5,3,0,d2).
-m(6,3,0,d2).
-m(7,3,0,d2).
-m(8,3,1,d2).
+node(1,3,0,d2).
+node(2,3,0,d2).
+node(3,3,0,d2).
+node(4,3,0,d2).
+node(5,3,0,d2).
+node(6,3,0,d2).
+node(7,3,0,d2).
+node(8,3,1,d2).
 
-m(1,4,0,d2).
-m(2,4,0,d2).
-m(3,4,0,d2).
-m(4,4,0,d2).
-m(5,4,0,d2).
-m(6,4,0,d2).
-m(7,4,0,d2).
-m(8,4,1,d2).
+node(1,4,0,d2).
+node(2,4,0,d2).
+node(3,4,0,d2).
+node(4,4,0,d2).
+node(5,4,0,d2).
+node(6,4,0,d2).
+node(7,4,0,d2).
+node(8,4,1,d2).
 
-m(1,5,1,d2).
-m(2,5,1,d2).
-m(3,5,1,d2).
-m(4,5,1,d2).
-m(5,5,0,d2).
-m(6,5,0,d2).
-m(7,5,0,d2).
-m(8,5,1,d2).
+node(1,5,1,d2).
+node(2,5,1,d2).
+node(3,5,1,d2).
+node(4,5,1,d2).
+node(5,5,0,d2).
+node(6,5,0,d2).
+node(7,5,0,d2).
+node(8,5,1,d2).
 
-m(1,6,1,d2).
-m(2,6,1,d2).
-m(3,6,1,d2).
-m(4,6,1,d2).
-m(5,6,0,d2).
-m(6,6,0,d2).
-m(7,6,0,d2).
-m(8,6,1,d2).
+node(1,6,1,d2).
+node(2,6,1,d2).
+node(3,6,1,d2).
+node(4,6,1,d2).
+node(5,6,0,d2).
+node(6,6,0,d2).
+node(7,6,0,d2).
+node(8,6,1,d2).
 
-m(1,7,1,d2).
-m(2,7,1,d2).
-m(3,7,1,d2).
-m(4,7,1,d2).
-m(5,7,0,d2).
-m(6,7,0,d2).
-m(7,7,0,d2).
-m(8,7,1,d2).
+node(1,7,1,d2).
+node(2,7,1,d2).
+node(3,7,1,d2).
+node(4,7,1,d2).
+node(5,7,0,d2).
+node(6,7,0,d2).
+node(7,7,0,d2).
+node(8,7,1,d2).
+
 
 
 
@@ -563,28 +571,21 @@ cria_grafo(Col,Lin,Piso):-
 cria_grafo_lin(0,_,_):-!.
 
 cria_grafo_lin(Col,Lin,Piso):-
-  ((corr_pos(_, Col, Lin, Piso),
-  node(Id1, Col, Lin, _, Piso))
+  ((ponto_acesso(_,Piso,cel(Col, Lin)),
+  node(Col, Lin, _, Piso))
   ;
-  (elev_pos(_, Col, Lin, Piso),
-  node(Id1, Col, Lin, _, Piso))
-  ;
-  (ponto_acesso(_, Col, Lin, Piso),
-  node(Id1, Col, Lin, _, Piso))
-  ;
-  node(Id1,Col,Lin,0,Piso)),
+  node(Col,Lin,0,Piso)),
   !,
   ColS is Col+1, ColA is Col-1, LinS is Lin+1,LinA is Lin-1,
-  ((node(Id2,ColS,Lin,0,Piso), assertz(edge(Id1, Id2, 1, Piso));true)), % Verifca à direita.
-  ((node(Id3,ColA,Lin,0,Piso), assertz(edge(Id1, Id3, 1, Piso));true)), % Verifca à esquerda.
-  ((node(Id4,Col,LinS,0,Piso), assertz(edge(Id1, Id4, 1, Piso));true)), % Verifica abaixo.
-  ((node(Id5,Col,LinA,0,Piso), assertz(edge(Id1, Id5, 1, Piso));true)), % Verifica acima.
+  ((node(ColS,LinS,0,Piso),node(Col,LinS,0,Piso),node(ColS,Lin,0,Piso), assertz(edge(lens(Piso,Col,Lin),lens(Piso,ColS,LinS) ,1, Piso));true)), % Verifca à direita.
+  ((node(ColA,LinS,0,Piso),node(Col,LinA,0,Piso),node(ColA,Lin,0,Piso), assertz(edge(lens(Piso,Col,Lin),lens(Piso,ColA,LinS) , 1, Piso));true)), % Verifca à esquerda.
+  ((node(ColS,LinA,0,Piso),node(Col,LinS,0,Piso),node(ColS,Lin,0,Piso), assertz(edge(lens(Piso,Col,Lin),lens(Piso,ColS,LinA) , 1, Piso));true)), % Verifica abaixo.
+  ((node(ColA,LinA,0,Piso),node(Col,LinA,0,Piso),node(ColA,Lin,0,Piso), assertz(edge(lens(Piso,Col,Lin),lens(Piso,ColS,LinS) , 1, Piso));true)), % Verifica acima.
   C is sqrt(2),
-  ((node(Id6,ColS,LinA,0,Piso), assertz(edge(Id1, Id6, C, Piso));true)), % Verifica diagonal superior direita.
-  ((node(Id7,ColA,LinA,0,Piso), assertz(edge(Id1, Id7, C, Piso));true)), % Verifica diagonal superior esquerda.
-  ((node(Id8,ColS,LinS,0,Piso), assertz(edge(Id1, Id8, C, Piso));true)), % Verifica diagonal inferior direita.
-  ((node(Id9,ColA,LinS,0,Piso), assertz(edge(Id1, Id9, C, Piso));true)), % Verifica diagonal inferior esquerda.
-  
+  ((node(ColS,Lin,0,Piso), assertz(edge(lens(Piso,Col,Lin),lens(Piso,ColS,Lin) , C, Piso));true)), % Verifica diagonal superior direita.
+  ((node(ColA,Lin,0,Piso), assertz(edge(lens(Piso,Col,Lin),lens(Piso,ColA,Lin) , C, Piso));true)), % Verifica diagonal superior esquerda.
+  ((node(Col,LinS,0,Piso), assertz(edge(lens(Piso,Col,Lin),lens(Piso,Col,LinS) , C, Piso));true)), % Verifica diagonal inferior direita.
+  ((node(Col,LinA,0,Piso), assertz(edge(lens(Piso,Col,Lin),lens(Piso,Col,LinA) , C, Piso));true)), % Verifica diagonal inferior esquerda.
   Col1 is Col-1,
   cria_grafo_lin(Col1,Lin,Piso),!.
 
@@ -604,7 +605,7 @@ aStar2(Dest,[(_,Custo,[Dest|T])|_],Cam,Custo,Piso):-
 aStar2(Dest,[(_,Ca,LA)|Outros],Cam,Custo,Piso):-
 	LA=[Act|_],
 	findall((CEX,CaX,[X|LA]),
-		(Dest\==Act,edge(Act,X,CustoX,Piso),\+ member(X,LA),
+		(Dest\==Act,(edge(Act,X,CustoX,Piso);edge(X,Act,CustoX,Piso)),\+ member(X,LA),
 		CaX is CustoX + Ca, estimativa(X,Dest,EstX,Piso),
 		CEX is CaX +EstX),Novos),
 	append(Outros,Novos,Todos),
@@ -622,7 +623,67 @@ estimativa(Nodo1,Nodo2,Estimativa,Piso):-
 %===========================================================================================================
 % caminho_completo
 
+is_elevador(Point) :-
+    ponto_acesso(Point, _, ElevadorType),
+    ElevadorType = elev(_, _).
 
+
+caminho_completo(Point, Point, [], [Points]).
+
+caminho_completo(Point, Point2, [],[Path1]):-
+	ponto_acesso(Point,PisoOr,Orig),
+	ponto_acesso(Point2,PisoDest,Dest),
+	write('==========================='), nl,
+	write('Point1: '), write(Point), nl,
+	write('PisoOr: '), write(PisoOr), nl,
+	write('Orig: '), write(Orig), nl,
+	write('PointX: '), write(Point2), nl,
+	write('PisoDest: '), write(PisoDest), nl,
+	write('Dest: '), write(Dest), nl,
+	write('Same floor!'), nl,
+	write('==========================='), nl,
+	%Path1 = [b], Custo = 0,
+	aStar(Orig, Dest, Path1, Custo, PisoOr),
+    caminho_completo(Point2, Point2, [], Path1).
+
+caminho_completo(Point1, Point2, [PointX|T], [Path1|RestPath]) :-
+	ponto_acesso(Point1,PisoOr,Orig),
+	ponto_acesso(PointX,PisoDest,Dest),
+	(is_elevador(Point1), is_elevador(PointX) ->
+		caminho_completo(PointX, Point2, T, RestPath)	
+    ;
+        (PisoOr = PisoDest ->
+			write('==========================='), nl,
+			write('Point1: '), write(Point1), nl,
+			write('PisoOr: '), write(PisoOr), nl,
+			write('Orig: '), write(Orig), nl,
+			write('PointX: '), write(PointX), nl,
+			write('PisoDest: '), write(PisoDest), nl,
+			write('Dest: '), write(Dest), nl,
+			write('Same floor!'), nl,
+			write('==========================='), nl,
+            aStar(Orig, Dest, Path1, Custo, PisoOr),
+			%Path1 = [a], Custo = 0,
+            caminho_completo(PointX, Point2, T, RestPath)
+        ;
+			(ponto_acesso(Point1,PisoDest,New)->
+			write('==========================='), nl,
+			write('Point1: '), write(Point1), nl,
+			write('PisoOr: '), write(PisoDest), nl,
+			write('Orig: '), write(New), nl,
+			write('PointX: '), write(PointX), nl,
+			write('PisoDest: '), write(PisoDest), nl,
+			write('Dest: '), write(Dest), nl,
+			write('Same floor!'), nl,
+			write('==========================='), nl,
+			%Path1 = [b], Custo = 1,
+			aStar(New, Dest, Path1, Custo, PisoOr),
+            caminho_completo(PointX, Point2, T, RestPath)
+			);
+            Path1 = [C], Custo = 1,
+            caminho_completo(PointX, Point2, T, RestPath)
+        )
+    ).
 	
 %===========================================================================================================
 % RobotPath 
@@ -631,6 +692,12 @@ robot_path(P1,P2, LLigMelhor, LPisMelhor, List) :-
 	ponto_acesso(P1,PisoOr,Orig),
 	ponto_acesso(P2,PisoDest,Dest),
 	melhor_caminho_pisos(PisoOr,PisoDest,LLigMelhor, LPisMelhor),
-	caminho_completo(P1,P2, LLigMelhor, LPisMelhor, List).
+	caminho_completo(P1,P2, LLigMelhor, List).
 
 
+
+% Predicate to print all edges
+print_all_edges(Graph) :-
+    edge(Start, End, Weight, Graph),
+    format('Edge: ~w -> ~w (Weight: ~w)~n', [Start, End, Weight]),
+    fail. % This predicate will fail intentionally to stop backtracking after printing all edges.
