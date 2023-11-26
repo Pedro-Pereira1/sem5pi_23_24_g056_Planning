@@ -605,8 +605,16 @@ aStar2(Dest,[(_,Custo,[Dest|T])|_],Cam,Custo,Piso):-
 aStar2(Dest,[(_,Ca,LA)|Outros],Cam,Custo,Piso):-
 	LA=[Act|_],
 	findall((CEX,CaX,[X|LA]),
-		(Dest\==Act,(edge(Act,X,CustoX,Piso);edge(X,Act,CustoX,Piso)),\+ member(X,LA),
-		CaX is CustoX + Ca, estimativa(X,Dest,EstX,Piso),
+		(Dest\==Act,
+		Act = cel(XX, YY),
+		ActH = lens(Piso, XX, YY),
+
+		X = lens(XXX, YYY, ZZZ),
+		XH = cel(YYY, ZZZ),
+
+		(edge(ActH,X,CustoX,Piso);edge(X,ActH,CustoX,Piso)),\+ member(X,LA),
+		CaX is CustoX + Ca,
+		estimativa(XH,Dest,EstX,Piso),
 		CEX is CaX +EstX),Novos),
 	append(Outros,Novos,Todos),
 	sort(Todos,TodosOrd),
@@ -616,9 +624,7 @@ aStar2(Dest,[(_,Ca,LA)|Outros],Cam,Custo,Piso):-
 % por (edge(Act,X,CustoX);edge(X,Act,CustoX))
 % se quiser ligacoes bidirecionais
 
-estimativa(Nodo1,Nodo2,Estimativa,Piso):-
-	node(Nodo1,X1,Y1,_,Piso),
-	node(Nodo2,X2,Y2,_,Piso),
+estimativa(cel(X1,Y1),cel(X2,Y2),Estimativa,Piso):-
 	Estimativa is sqrt((X1-X2)^2+(Y1-Y2)^2).
 %===========================================================================================================
 % caminho_completo
