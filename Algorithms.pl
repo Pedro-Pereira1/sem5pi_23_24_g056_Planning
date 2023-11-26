@@ -39,6 +39,21 @@ corredor(b,c,b3,c3).
 %===========================================================================================================
 % Pontos de Acesso
 
+ponto_acesso(a101,a1,cel(2,2)).
+ponto_acesso(elev(a1, a2),a1,cel(7,7)).
+
+ponto_acesso(elev(a1, a2),a2,cel(2,2)).
+ponto_acesso(cor(a2, b2),a2,cel(7,7)).
+
+ponto_acesso(cor(a2, b2),b2,cel(2,2)).
+ponto_acesso(cor(b2, c2),b2,cel(7,7)).
+
+ponto_acesso(cor(b2, c2),c2,cel(2,2)).
+ponto_acesso(cor(c2, d2),c2,cel(7,7)).
+
+ponto_acesso(cor(c2, d2),d2,cel(2,2)).
+ponto_acesso(d201,d2,cel(7,7)).
+
 % A
 %pa(APF,a1,0,1).
 %pa(Beng,a1,0,1).
@@ -199,6 +214,259 @@ m(6,7,0,a1).
 m(7,7,0,a1).
 m(8,7,1,a1).
 
+m(1,1,1,a2).
+m(2,1,1,a2).
+m(3,1,1,a2).
+m(4,1,1,a2).
+m(5,1,1,a2).
+m(6,1,1,a2).
+m(7,1,1,a2).
+m(8,1,1,a2).
+
+m(1,2,0,a2).
+m(2,2,0,a2).
+m(3,2,0,a2).
+m(4,2,0,a2).
+m(5,2,0,a2).
+m(6,2,0,a2).
+m(7,2,0,a2).
+m(8,2,1,a2).
+
+m(1,3,0,a2).
+m(2,3,0,a2).
+m(3,3,0,a2).
+m(4,3,0,a2).
+m(5,3,0,a2).
+m(6,3,0,a2).
+m(7,3,0,a2).
+m(8,3,1,a2).
+
+m(1,4,0,a2).
+m(2,4,0,a2).
+m(3,4,0,a2).
+m(4,4,0,a2).
+m(5,4,0,a2).
+m(6,4,0,a2).
+m(7,4,0,a2).
+m(8,4,1,a2).
+
+m(1,5,1,a2).
+m(2,5,1,a2).
+m(3,5,1,a2).
+m(4,5,1,a2).
+m(5,5,0,a2).
+m(6,5,0,a2).
+m(7,5,0,a2).
+m(8,5,1,a2).
+
+m(1,6,1,a2).
+m(2,6,1,a2).
+m(3,6,1,a2).
+m(4,6,1,a2).
+m(5,6,0,a2).
+m(6,6,0,a2).
+m(7,6,0,a2).
+m(8,6,1,a2).
+
+m(1,7,1,a2).
+m(2,7,1,a2).
+m(3,7,1,a2).
+m(4,7,1,a2).
+m(5,7,0,a2).
+m(6,7,0,a2).
+m(7,7,0,a2).
+m(8,7,1,a2).
+
+m(1,1,1,b2).
+m(2,1,1,b2).
+m(3,1,1,b2).
+m(4,1,1,b2).
+m(5,1,1,b2).
+m(6,1,1,b2).
+m(7,1,1,b2).
+m(8,1,1,b2).
+
+m(1,2,0,b2).
+m(2,2,0,b2).
+m(3,2,0,b2).
+m(4,2,0,b2).
+m(5,2,0,b2).
+m(6,2,0,b2).
+m(7,2,0,b2).
+m(8,2,1,b2).
+
+m(1,3,0,b2).
+m(2,3,0,b2).
+m(3,3,0,b2).
+m(4,3,0,b2).
+m(5,3,0,b2).
+m(6,3,0,b2).
+m(7,3,0,b2).
+m(8,3,1,b2).
+
+m(1,4,0,b2).
+m(2,4,0,b2).
+m(3,4,0,b2).
+m(4,4,0,b2).
+m(5,4,0,b2).
+m(6,4,0,b2).
+m(7,4,0,b2).
+m(8,4,1,b2).
+
+m(1,5,1,b2).
+m(2,5,1,b2).
+m(3,5,1,b2).
+m(4,5,1,b2).
+m(5,5,0,b2).
+m(6,5,0,b2).
+m(7,5,0,b2).
+m(8,5,1,b2).
+
+m(1,6,1,b2).
+m(2,6,1,b2).
+m(3,6,1,b2).
+m(4,6,1,b2).
+m(5,6,0,b2).
+m(6,6,0,b2).
+m(7,6,0,b2).
+m(8,6,1,b2).
+
+m(1,7,1,b2).
+m(2,7,1,b2).
+m(3,7,1,b2).
+m(4,7,1,b2).
+m(5,7,0,b2).
+m(6,7,0,b2).
+m(7,7,0,b2).
+m(8,7,1,b2).
+
+m(1,1,1,c2).
+m(2,1,1,c2).
+m(3,1,1,c2).
+m(4,1,1,c2).
+m(5,1,1,c2).
+m(6,1,1,c2).
+m(7,1,1,c2).
+m(8,1,1,c2).
+
+m(1,2,0,c2).
+m(2,2,0,c2).
+m(3,2,0,c2).
+m(4,2,0,c2).
+m(5,2,0,c2).
+m(6,2,0,c2).
+m(7,2,0,c2).
+m(8,2,1,c2).
+
+m(1,3,0,c2).
+m(2,3,0,c2).
+m(3,3,0,c2).
+m(4,3,0,c2).
+m(5,3,0,c2).
+m(6,3,0,c2).
+m(7,3,0,c2).
+m(8,3,1,c2).
+
+m(1,4,0,c2).
+m(2,4,0,c2).
+m(3,4,0,c2).
+m(4,4,0,c2).
+m(5,4,0,c2).
+m(6,4,0,c2).
+m(7,4,0,c2).
+m(8,4,1,c2).
+
+m(1,5,1,c2).
+m(2,5,1,c2).
+m(3,5,1,c2).
+m(4,5,1,c2).
+m(5,5,0,c2).
+m(6,5,0,c2).
+m(7,5,0,c2).
+m(8,5,1,c2).
+
+m(1,6,1,c2).
+m(2,6,1,c2).
+m(3,6,1,c2).
+m(4,6,1,c2).
+m(5,6,0,c2).
+m(6,6,0,c2).
+m(7,6,0,c2).
+m(8,6,1,c2).
+
+m(1,7,1,c2).
+m(2,7,1,c2).
+m(3,7,1,c2).
+m(4,7,1,c2).
+m(5,7,0,c2).
+m(6,7,0,c2).
+m(7,7,0,c2).
+m(8,7,1,c2).
+
+m(1,1,1,d2).
+m(2,1,1,d2).
+m(3,1,1,d2).
+m(4,1,1,d2).
+m(5,1,1,d2).
+m(6,1,1,d2).
+m(7,1,1,d2).
+m(8,1,1,d2).
+
+m(1,2,0,d2).
+m(2,2,0,d2).
+m(3,2,0,d2).
+m(4,2,0,d2).
+m(5,2,0,d2).
+m(6,2,0,d2).
+m(7,2,0,d2).
+m(8,2,1,d2).
+
+m(1,3,0,d2).
+m(2,3,0,d2).
+m(3,3,0,d2).
+m(4,3,0,d2).
+m(5,3,0,d2).
+m(6,3,0,d2).
+m(7,3,0,d2).
+m(8,3,1,d2).
+
+m(1,4,0,d2).
+m(2,4,0,d2).
+m(3,4,0,d2).
+m(4,4,0,d2).
+m(5,4,0,d2).
+m(6,4,0,d2).
+m(7,4,0,d2).
+m(8,4,1,d2).
+
+m(1,5,1,d2).
+m(2,5,1,d2).
+m(3,5,1,d2).
+m(4,5,1,d2).
+m(5,5,0,d2).
+m(6,5,0,d2).
+m(7,5,0,d2).
+m(8,5,1,d2).
+
+m(1,6,1,d2).
+m(2,6,1,d2).
+m(3,6,1,d2).
+m(4,6,1,d2).
+m(5,6,0,d2).
+m(6,6,0,d2).
+m(7,6,0,d2).
+m(8,6,1,d2).
+
+m(1,7,1,d2).
+m(2,7,1,d2).
+m(3,7,1,d2).
+m(4,7,1,d2).
+m(5,7,0,d2).
+m(6,7,0,d2).
+m(7,7,0,d2).
+m(8,7,1,d2).
+
+
 
 %===========================================================================================================
 % Encontrar um caminho entre dois edificios
@@ -281,87 +549,88 @@ extract_floor_sequence([cor(_, To) | Rest], [To | Result]) :-
 
 %===========================================================================================================
 % Cria o grafo de ligacoes entre celulas (celulas com 0 estão ligadas a celulas com 0) == cria_grafo(8,7).
+% m(col, lin, valor, piso) => m(0, 0, 0, A1)...
+% node(Id, Col, Lin, Valor, Piso)...
+% edge(Id1, Id2, Custo, Piso)...
 
-cria_grafo(_,0):-!.
-cria_grafo(Col,Lin):-
-	cria_grafo_lin(Col,Lin),
-	Lin1 is Lin-1,
-	cria_grafo(Col,Lin1).
-
-cria_grafo_lin(0,_):-!.
-cria_grafo_lin(Col,Lin):-m(Col,Lin,0),!,ColS is Col+1, ColA is Col-1, LinS is Lin+1,LinA is Lin-1,
-    ((m(ColS,Lin,0),assertz(ligacel(cel(Col,Lin),cel(ColS,Lin)));true)),
-    ((m(ColA,Lin,0),assertz(ligacel(cel(Col,Lin),cel(ColA,Lin)));true)),
-    ((m(Col,LinS,0),assertz(ligacel(cel(Col,Lin),cel(Col,LinS)));true)),
-    ((m(Col,LinA,0),assertz(ligacel(cel(Col,Lin),cel(Col,LinA)));true)),
-    Col1 is Col-1,
-    cria_grafo_lin(Col1,Lin).
-cria_grafo_lin(Col,Lin):-Col1 is Col-1,cria_grafo_lin(Col1,Lin).
-
-%===========================================================================================================
-% Deep First Search (DFS) == dfs(cel(1,3),cel(6,7),L).
-
-dfs(Orig,Dest,Cam):-
-	dfs2(Orig,Dest,[Orig],Cam).
-
-dfs2(Dest,Dest,LA,Cam):-
-	reverse(LA,Cam).
-
-dfs2(Act,Dest,LA,Cam):-
-	ligacel(Act,X),
-        \+ member(X,LA),
-	dfs2(X,Dest,[X|LA],Cam).
-
-%===========================================================================================================
-% All Deep First Search (DFS) == all_dfs(cel(1,3),cel(6,7),L).
-
-all_dfs(Orig,Dest,LCam):-
-	findall(Cam,dfs(Orig,Dest,Cam),LCam).
-
-%===========================================================================================================
-% Best Deep First Search (DFS) == better_dfs(cel(1,3),cel(6,7),L).
-
-better_dfs(Orig,Dest,Cam):-
-	all_dfs(Orig,Dest,LCam),
-	shortlist(LCam,Cam,_).
+cria_grafo(_,0,_):-!.
+cria_grafo(Col,Lin,Piso):-
+  cria_grafo_lin(Col,Lin,Piso),
+  Lin1 is Lin-1,
+  cria_grafo(Col,Lin1,Piso).
 
 
-shortlist([L],L,N):-!,length(L,N).
+cria_grafo_lin(0,_,_):-!.
 
-shortlist([L|LL],Lm,Nm):-shortlist(LL,Lm1,Nm1),
-				length(L,NL),
-			((NL<Nm1,!,Lm=L,Nm is NL);(Lm=Lm1,Nm is Nm1)).
+cria_grafo_lin(Col,Lin,Piso):-
+  ((corr_pos(_, Col, Lin, Piso),
+  node(Id1, Col, Lin, _, Piso))
+  ;
+  (elev_pos(_, Col, Lin, Piso),
+  node(Id1, Col, Lin, _, Piso))
+  ;
+  (ponto_acesso(_, Col, Lin, Piso),
+  node(Id1, Col, Lin, _, Piso))
+  ;
+  node(Id1,Col,Lin,0,Piso)),
+  !,
+  ColS is Col+1, ColA is Col-1, LinS is Lin+1,LinA is Lin-1,
+  ((node(Id2,ColS,Lin,0,Piso), assertz(edge(Id1, Id2, 1, Piso));true)), % Verifca à direita.
+  ((node(Id3,ColA,Lin,0,Piso), assertz(edge(Id1, Id3, 1, Piso));true)), % Verifca à esquerda.
+  ((node(Id4,Col,LinS,0,Piso), assertz(edge(Id1, Id4, 1, Piso));true)), % Verifica abaixo.
+  ((node(Id5,Col,LinA,0,Piso), assertz(edge(Id1, Id5, 1, Piso));true)), % Verifica acima.
+  C is sqrt(2),
+  ((node(Id6,ColS,LinA,0,Piso), assertz(edge(Id1, Id6, C, Piso));true)), % Verifica diagonal superior direita.
+  ((node(Id7,ColA,LinA,0,Piso), assertz(edge(Id1, Id7, C, Piso));true)), % Verifica diagonal superior esquerda.
+  ((node(Id8,ColS,LinS,0,Piso), assertz(edge(Id1, Id8, C, Piso));true)), % Verifica diagonal inferior direita.
+  ((node(Id9,ColA,LinS,0,Piso), assertz(edge(Id1, Id9, C, Piso));true)), % Verifica diagonal inferior esquerda.
+  
+  Col1 is Col-1,
+  cria_grafo_lin(Col1,Lin,Piso),!.
 
+cria_grafo_lin(Col,Lin,Piso):-
+  Col1 is Col-1,cria_grafo_lin(Col1,Lin,Piso).
 
 %===========================================================================================================
-% Breadth First Search (BFS) == bfs(cel(1,3),cel(6,7),L).
+% A-star.
 
-bfs(Orig,Dest,Cam):-bfs2(Dest,[[Orig]],Cam).
+aStar(Orig,Dest,Cam,Custo,Piso):-
+    aStar2(Dest,[(_,0,[Orig])],Cam,Custo,Piso).
 
-bfs2(Dest,[[Dest|T]|_],Cam):-
-	reverse([Dest|T],Cam).
+% Se for preciso apenas o melhor caminho, colocar cut a seguir ao reverse.
+aStar2(Dest,[(_,Custo,[Dest|T])|_],Cam,Custo,Piso):-
+	reverse([Dest|T],Cam),!.
 
-bfs2(Dest,[LA|Outros],Cam):-
+aStar2(Dest,[(_,Ca,LA)|Outros],Cam,Custo,Piso):-
 	LA=[Act|_],
-	findall([X|LA],
-		(Dest\==Act,ligacel(Act,X),\+ member(X,LA)),
-		Novos),
+	findall((CEX,CaX,[X|LA]),
+		(Dest\==Act,edge(Act,X,CustoX,Piso),\+ member(X,LA),
+		CaX is CustoX + Ca, estimativa(X,Dest,EstX,Piso),
+		CEX is CaX +EstX),Novos),
 	append(Outros,Novos,Todos),
-	bfs2(Dest,Todos,Cam).
+	sort(Todos,TodosOrd),
+	aStar2(Dest,TodosOrd,Cam,Custo,Piso).
+
+% substituir a chamada edge(Act,X,CustoX)
+% por (edge(Act,X,CustoX);edge(X,Act,CustoX))
+% se quiser ligacoes bidirecionais
+
+estimativa(Nodo1,Nodo2,Estimativa,Piso):-
+	node(Nodo1,X1,Y1,_,Piso),
+	node(Nodo2,X2,Y2,_,Piso),
+	Estimativa is sqrt((X1-X2)^2+(Y1-Y2)^2).
+%===========================================================================================================
+% caminho_completo
 
 
+	
 %===========================================================================================================
 % RobotPath 
 
-%robotPath(Orig, PisoOr, Dest, PisoDest, Number, Cam) :-
-%    (Number = 1 ->
-%        caminho_pisos(PisoOr,PisoDest,LEdCam,LLig),
-%		
-%
-%    ; 
-%        melhor_caminho_pisos(PisoOr,PisoDest,LLigMelhor),
-%
-%
-%    ).
-	
+robot_path(P1,P2, LLigMelhor, LPisMelhor, List) :-
+	ponto_acesso(P1,PisoOr,Orig),
+	ponto_acesso(P2,PisoDest,Dest),
+	melhor_caminho_pisos(PisoOr,PisoDest,LLigMelhor, LPisMelhor),
+	caminho_completo(P1,P2, LLigMelhor, LPisMelhor, List).
+
 
