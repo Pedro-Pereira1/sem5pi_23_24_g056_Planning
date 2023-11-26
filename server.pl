@@ -51,18 +51,11 @@ get_buildings():-
     delete_buildings(),
     http_open('http://localhost:4000/api/buildings/listAllBuildings', ResJSON, [cert_verify_hook(cert_accept_any)]),
     json_read_dict(ResJSON, ResObj),
-    atts_building(ResObj, ResVal),
-    create_building(ResVal).
-
-    %get_floors(ResObj).
-
-atts_building([], []).
-atts_building([H|T], [H.buildingCode|L]):-
-    atts_building(T, L).
+    create_building(ResObj).
     
 create_building([]).
-create_building([C|T]):-
-    assertz(building(C)),
+create_building([Building|T]):-
+    assertz(building(Building.buildingCode)),
     create_building(T).
 
 delete_buildings():-
