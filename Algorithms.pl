@@ -547,7 +547,7 @@ conta([elev(_,_)|L],NElev,NCor):- conta(L,NElevL,NCor),NElev is NElevL+1.
 conta([cor(_,_)|L],NElev,NCor):-conta(L,NElev,NCorL),NCor is NCorL+1.
 
 %===========================================================================================================
-% 
+% Extrair a sequencia de pisos de um caminho
 
 extract_floor_sequence([], []).
 extract_floor_sequence([elev(From, To) | Rest], [From, To | Result]) :-
@@ -595,6 +595,7 @@ cria_grafo_lin(Col,Lin,Piso):-
 %===========================================================================================================
 % A-star.
 
+% - aStar(Orig,Dest,Cam,Custo,Piso)
 aStar(Orig,Dest,Cam,Custo,Piso):-
     aStar2(Dest,[(_,0,[Orig])],Cam,Custo,Piso).
 
@@ -692,7 +693,7 @@ caminho_completo(Point1, Point2, [PointX|T], [Path1|RestPath]) :-
     ).
 	
 %===========================================================================================================
-% RobotPath 
+% RobotPath -> caminho entre dois pontos de acesso
 
 robot_path(P1,P2, LLigMelhor, LPisMelhor, List) :-
 	ponto_acesso(P1,PisoOr,Orig),
@@ -700,8 +701,7 @@ robot_path(P1,P2, LLigMelhor, LPisMelhor, List) :-
 	melhor_caminho_pisos(PisoOr,PisoDest,LLigMelhor, LPisMelhor),
 	caminho_completo(P1,P2, LLigMelhor, List).
 
-
-
+%===========================================================================================================
 % Predicate to print all edges
 print_all_edges(Graph) :-
     edge(Start, End, Weight, Graph),
