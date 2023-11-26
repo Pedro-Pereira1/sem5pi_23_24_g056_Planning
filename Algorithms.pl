@@ -604,7 +604,7 @@ aStar2(Dest,[(_,Custo,[Dest|T])|_],Cam,Custo,Piso):-
 
 aStar2(Dest,[(_,Ca,LA)|Outros],Cam,Custo,Piso):-
 	LA=[Act|_],
-	findall((CEX,CaX,[X|LA]),
+	findall((CEX,CaX,[XH|LA]),
 		(Dest\==Act,
 		Act = cel(XX, YY),
 		ActH = lens(Piso, XX, YY),
