@@ -1,44 +1,123 @@
 %===========================================================================================================
 % Ligações entre edificios
 
-liga(a,h).
-liga(b,g).
-liga(b,i).
-liga(g,h).
-liga(h,i).
-liga(i,j).
+liga(a,b).
+liga(b,c).
+liga(b,d).
+liga(c,d).
+
 
 %===========================================================================================================
 % Pisos dos edificios
 
-pisos(a,[a1]).
-pisos(b,[b1,b2,b3,b4]).
-pisos(g,[g2,g3,g4]).
-pisos(h,[h1,h2,h3,h4]).
-pisos(i,[i1,i2,i3,i4]).
-pisos(j,[j1,j2,j3,j4]).
+pisos(a,[a1,a2]).
+pisos(b,[b1,b2,b3]).
+pisos(c,[c0,c1,c2,c3]).
+pisos(d,[d0,d1,d2]).
 
 %===========================================================================================================
 % Elevador de cada edificio
 
-elevador(b,[b1,b2,b3,b4]).
-elevador(g,[g2,g3,g4]).
-elevador(i,[i1,i2,i3,i4]).
-elevador(j,[j1,j2,j3,j4]).
+elevador(a,[a1,a2]).
+elevador(b,[b1,b2,b3]).
+elevador(c,[c0,c1,c2,c3]).
+elevador(d,[d0,d1,d2]).
 
 %===========================================================================================================
 % Ligações entre pisos
 
-corredor(a,h,a1,h2).
-corredor(b,g,b2,g2).
-corredor(b,g,b3,g3).
-corredor(b,i,b3,i3).
-corredor(g,h,g2,h2).
-corredor(g,h,g3,h3).
-corredor(h,i,h2,i2).
-corredor(i,j,i1,j1).
-corredor(i,j,i2,j2).
-corredor(i,j,i3,j3).
+corredor(c,d,c1,d1).
+
+corredor(a,b,a2,b2).
+corredor(b,c,b2,c2).
+corredor(b,d,b2,d2).
+corredor(c,d,c2,d2).
+
+corredor(b,c,b3,c3).
+
+
+%===========================================================================================================
+% Pontos de Acesso
+
+% A
+%pa(APF,a1,0,1).
+%pa(Beng,a1,0,1).
+%pa(K1,a1,0,1).
+%pa(K2,a1,0,1).
+%pa(R1,a1,0,1).
+%pa(R2,a1,0,1).
+%pa(E,a1,0,1).
+%
+%pa(A201,a2,0,1).
+%pa(A202,a2,0,1).
+%pa(A203,a2,0,1).
+%pa(A204,a2,0,1).
+%pa(A205,a2,0,1).
+%pa(A206,a2,0,1).
+%pa(A207,a2,0,1).
+%pa(A208,a2,0,1).
+%pa(A209,a2,0,1).
+%pa(b2,a2,0,1).
+%pa(E,a2,0,1).
+%
+%% B
+%
+%pa(B101,b1,0,1).
+%pa(B102,b1,0,1).
+%pa(B103,b1,0,1).
+%pa(B104,b1,0,1).
+%pa(B105,b1,0,1).
+%pa(B106,b1,0,1).
+%pa(B106B,b1,0,1).
+%pa(B107,b1,0,1).
+%pa(E,b1,0,1).
+%
+%
+%% C
+%
+%pa(C101,c0,0,1).
+%pa(C102,c0,0,1).
+%pa(C103,c0,0,1).
+%pa(C104,c0,0,1).
+%pa(C105,c0,0,1).
+%pa(C106,c0,0,1).
+%pa(C108,c0,0,1).
+%pa(C110,c0,0,1).
+%pa(E,c0,0,1).
+%
+%pa(D201,c1,0,1).
+%pa(D202,c1,0,1).
+%pa(D203,c1,0,1).
+%pa(D204,c1,0,1).
+%pa(D205,c1,0,1).
+%pa(D206,c1,0,1).
+%pa(D207,c1,0,1).
+%pa(D209,c1,0,1).
+%pa(E,c1,0,1).
+%pa(d1,c1,0,1).
+%
+%
+%
+%% D
+%
+%pa(D101,d0,0,1).
+%pa(D102,d0,0,1).
+%pa(D103,d0,0,1).
+%pa(D104,d0,0,1).
+%pa(D105,d0,0,1).
+%pa(D106,d0,0,1).
+%pa(D108,d0,0,1).
+%
+%
+%pa(D201,d1,0,1).
+%pa(D202,d1,0,1).
+%pa(D203,d1,0,1).
+%pa(D204,d1,0,1).
+%pa(D205,d1,0,1).
+%pa(D206,d1,0,1).
+%pa(E,d1,0,1).
+%pa(c1,d1,0,1).
+
 
 %===========================================================================================================
 % Mapa de piso
@@ -120,6 +199,7 @@ m(6,7,0).
 m(7,7,0).
 m(8,7,1).
 
+
 %===========================================================================================================
 % Encontrar um caminho entre dois edificios
 
@@ -138,39 +218,40 @@ caminho_edificios(Current,End,List,Path):-
 %===========================================================================================================
 % Encontrar um caminho entre pisos de edificios usando corredores e elevadores
 
-caminho_pisos(PisoOr,PisoDest,LEdCam,LLig):-
+caminho_pisos(PisoOr,PisoDest,LEdCam,LLig,LPsCam):-
 	pisos(EdOr,LPisosOr),
 	member(PisoOr,LPisosOr),
 	pisos(EdDest,LPisosDest),
 	member(PisoDest,LPisosDest),
-	caminho_edificios(EdOr,EdDest,LEdCam),
-	segue_pisos(PisoOr,PisoDest,LEdCam,LLig).
+	caminho_edificios(EdOr,EdDest,LEdCam),!,
+	segue_pisos(PisoOr,PisoDest,LEdCam,LLig,LpsCamAux),
+	append([PisoOr],LpsCamAux,LPsCam).
 	
-segue_pisos(PisoDest,PisoDest,_,[]).
+segue_pisos(PisoDest,PisoDest,_,[],[]).
 
-segue_pisos(PisoDest1,PisoDest,[EdDest],[elev(PisoDest1,PisoDest)]):-
+segue_pisos(PisoDest1,PisoDest,[EdDest],[elev(PisoDest1,PisoDest)],[PisoDest|ListaPisos]):-
 	PisoDest\==PisoDest1,
 	elevador(EdDest,LPisos),
 	member(PisoDest1,LPisos),
 	member(PisoDest,LPisos).
 	
-segue_pisos(PisoAct,PisoDest,[EdAct,EdSeg|LOutrosEd],[cor(PisoAct,PisoSeg)|LOutrasLig]):-
+segue_pisos(PisoAct,PisoDest,[EdAct,EdSeg|LOutrosEd],[cor(PisoAct,PisoSeg)|LOutrasLig],[PisoSeg|ListaPisos]):-
 	(corredor(EdAct,EdSeg,PisoAct,PisoSeg);corredor(EdSeg,EdAct,PisoSeg,PisoAct)),
-	segue_pisos(PisoSeg,PisoDest,[EdSeg|LOutrosEd],LOutrasLig).
+	segue_pisos(PisoSeg,PisoDest,[EdSeg|LOutrosEd],LOutrasLig, ListaPisos).
 	
-segue_pisos(PisoAct,PisoDest,[EdAct,EdSeg|LOutrosEd],[elev(PisoAct,PisoAct1),cor(PisoAct1,PisoSeg)|LOutrasLig]):-
+segue_pisos(PisoAct,PisoDest,[EdAct,EdSeg|LOutrosEd],[elev(PisoAct,PisoAct1),cor(PisoAct1,PisoSeg)|LOutrasLig],[PisoAct1, PisoSeg | ListaPisos]):-
 	(corredor(EdAct,EdSeg,PisoAct1,PisoSeg);corredor(EdSeg,EdAct,PisoSeg,PisoAct1)),
 	PisoAct1\==PisoAct,
 	elevador(EdAct,LPisos),
 	member(PisoAct,LPisos),
 	member(PisoAct1,LPisos),
-	segue_pisos(PisoSeg,PisoDest,[EdSeg|LOutrosEd],LOutrasLig).
+	segue_pisos(PisoSeg,PisoDest,[EdSeg|LOutrosEd],LOutrasLig,ListaPisos).
 	
 %===========================================================================================================	
 % Escolher o caminho que envolve menos utilizacoes de elevadores e em caso de iguadade menos utilizacao de corredores
 
-melhor_caminho_pisos(PisoOr,PisoDest,LLigMelhor):-
-	findall(LLig,caminho_pisos(PisoOr,PisoDest,_,LLig),LLLig),
+melhor_caminho_pisos(PisoOr,PisoDest,LLigMelhor,LPsCam):-
+	findall(LLig,caminho_pisos(PisoOr,PisoDest,_,LLig,LPsCam),LLLig),
 	menos_elevadores(LLLig,LLigMelhor,_,_).
 
 menos_elevadores([LLig],LLig,NElev,NCor):-
@@ -255,3 +336,20 @@ bfs2(Dest,[LA|Outros],Cam):-
 		Novos),
 	append(Outros,Novos,Todos),
 	bfs2(Dest,Todos,Cam).
+
+
+%===========================================================================================================
+% RobotPath 
+
+%robotPath(Orig, PisoOr, Dest, PisoDest, Number, Cam) :-
+%    (Number = 1 ->
+%        caminho_pisos(PisoOr,PisoDest,LEdCam,LLig),
+%		
+%
+%    ; 
+%        melhor_caminho_pisos(PisoOr,PisoDest,LLigMelhor),
+%
+%
+%    ).
+	
+
