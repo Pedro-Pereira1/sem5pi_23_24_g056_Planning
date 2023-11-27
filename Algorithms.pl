@@ -40,19 +40,19 @@ corredor(b,c,b3,c3).
 % Pontos de Acesso
 
 ponto_acesso(a101,a1,cel(2,2)).
-ponto_acesso(elev(a1, a2),a1,cel(7,7)).
+ponto_acesso(elev(a1, a2),a1,cel(6,6)).
 
-ponto_acesso(elev(a1, a2),a2,cel(2,2)).
-ponto_acesso(cor(a2, b2),a2,cel(7,7)).
+ponto_acesso(elev(a1, a2),a2,cel(6,6)).
+ponto_acesso(cor(a2, b2),a2,cel(1,4)).
 
-ponto_acesso(cor(a2, b2),b2,cel(2,2)).
+ponto_acesso(cor(a2, b2),b2,cel(8,4)).
 ponto_acesso(cor(b2, c2),b2,cel(7,7)).
 
-ponto_acesso(cor(b2, c2),c2,cel(2,2)).
+ponto_acesso(cor(b2, c2),c2,cel(7,1)).
 ponto_acesso(cor(c2, d2),c2,cel(7,7)).
 
-ponto_acesso(cor(c2, d2),d2,cel(2,2)).
-ponto_acesso(d201,d2,cel(7,7)).
+ponto_acesso(cor(c2, d2),d2,cel(7,1)).
+ponto_acesso(d201,d2,cel(1,4)).
 
 % A
 %pa(APF,a1,0,1).
@@ -155,8 +155,7 @@ ponto_acesso(d201,d2,cel(7,7)).
 %linha 6:1,1,1,1,0,0,0,1
 %linha 7:1,1,1,1,0,0,0,1
 %
-%
-%
+
 %m(col,lin,valor,Piso)
 node(1,1,1,a1).
 node(2,1,1,a1).
@@ -216,9 +215,9 @@ node(1,7,1,a1).
 node(2,7,1,a1).
 node(3,7,1,a1).
 node(4,7,1,a1).
-node(5,7,0,a1).
-node(6,7,0,a1).
-node(7,7,0,a1).
+node(5,7,1,a1).
+node(6,7,1,a1).
+node(7,7,1,a1).
 node(8,7,1,a1).
 
 node(1,1,1,a2).
@@ -258,18 +257,18 @@ node(7,4,0,a2).
 node(8,4,1,a2).
 
 node(1,5,1,a2).
-node(2,5,1,a2).
-node(3,5,1,a2).
-node(4,5,1,a2).
+node(2,5,0,a2).
+node(3,5,0,a2).
+node(4,5,0,a2).
 node(5,5,0,a2).
 node(6,5,0,a2).
 node(7,5,0,a2).
 node(8,5,1,a2).
 
 node(1,6,1,a2).
-node(2,6,1,a2).
-node(3,6,1,a2).
-node(4,6,1,a2).
+node(2,6,0,a2).
+node(3,6,0,a2).
+node(4,6,0,a2).
 node(5,6,0,a2).
 node(6,6,0,a2).
 node(7,6,0,a2).
@@ -279,9 +278,9 @@ node(1,7,1,a2).
 node(2,7,1,a2).
 node(3,7,1,a2).
 node(4,7,1,a2).
-node(5,7,0,a2).
-node(6,7,0,a2).
-node(7,7,0,a2).
+node(5,7,1,a2).
+node(6,7,1,a2).
+node(7,7,1,a2).
 node(8,7,1,a2).
 
 node(1,1,1,b2).
@@ -293,32 +292,32 @@ node(6,1,1,b2).
 node(7,1,1,b2).
 node(8,1,1,b2).
 
-node(1,2,0,b2).
+node(1,2,1,b2).
 node(2,2,0,b2).
 node(3,2,0,b2).
 node(4,2,0,b2).
 node(5,2,0,b2).
 node(6,2,0,b2).
 node(7,2,0,b2).
-node(8,2,1,b2).
+node(8,2,0,b2).
 
-node(1,3,0,b2).
+node(1,3,1,b2).
 node(2,3,0,b2).
 node(3,3,0,b2).
 node(4,3,0,b2).
 node(5,3,0,b2).
 node(6,3,0,b2).
 node(7,3,0,b2).
-node(8,3,1,b2).
+node(8,3,0,b2).
 
-node(1,4,0,b2).
+node(1,4,1,b2).
 node(2,4,0,b2).
 node(3,4,0,b2).
 node(4,4,0,b2).
 node(5,4,0,b2).
 node(6,4,0,b2).
 node(7,4,0,b2).
-node(8,4,1,b2).
+node(8,4,0,b2).
 
 node(1,5,1,b2).
 node(2,5,1,b2).
@@ -351,9 +350,9 @@ node(1,1,1,c2).
 node(2,1,1,c2).
 node(3,1,1,c2).
 node(4,1,1,c2).
-node(5,1,1,c2).
-node(6,1,1,c2).
-node(7,1,1,c2).
+node(5,1,0,c2).
+node(6,1,0,c2).
+node(7,1,0,c2).
 node(8,1,1,c2).
 
 node(1,2,0,c2).
@@ -414,24 +413,24 @@ node(1,1,1,d2).
 node(2,1,1,d2).
 node(3,1,1,d2).
 node(4,1,1,d2).
-node(5,1,1,d2).
-node(6,1,1,d2).
-node(7,1,1,d2).
+node(5,1,0,d2).
+node(6,1,0,d2).
+node(7,1,0,d2).
 node(8,1,1,d2).
 
 node(1,2,0,d2).
 node(2,2,0,d2).
 node(3,2,0,d2).
 node(4,2,0,d2).
-node(5,2,0,d2).
+node(5,2,1,d2).
 node(6,2,0,d2).
 node(7,2,0,d2).
 node(8,2,1,d2).
 
-node(1,3,0,d2).
-node(2,3,0,d2).
-node(3,3,0,d2).
-node(4,3,0,d2).
+node(1,3,1,d2).
+node(2,3,1,d2).
+node(3,3,1,d2).
+node(4,3,1,d2).
 node(5,3,0,d2).
 node(6,3,0,d2).
 node(7,3,0,d2).
@@ -472,6 +471,8 @@ node(5,7,0,d2).
 node(6,7,0,d2).
 node(7,7,0,d2).
 node(8,7,1,d2).
+
+
 
 
 
@@ -640,18 +641,38 @@ caminho_completo(Point, Point, [], [Points]).
 caminho_completo(Point, Point2, [],[Path1]):-
 	ponto_acesso(Point,PisoOr,Orig),
 	ponto_acesso(Point2,PisoDest,Dest),
-	write('==========================='), nl,
-	write('Point1: '), write(Point), nl,
-	write('PisoOr: '), write(PisoOr), nl,
-	write('Orig: '), write(Orig), nl,
-	write('PointX: '), write(Point2), nl,
-	write('PisoDest: '), write(PisoDest), nl,
-	write('Dest: '), write(Dest), nl,
-	write('Same floor!'), nl,
-	write('==========================='), nl,
-	%Path1 = [b], Custo = 0,
-	aStar(Orig, Dest, Path1, Custo, PisoOr),
-    caminho_completo(Point2, Point2, [], Path1).
+	 (PisoOr = PisoDest ->
+			write('==========================='), nl,
+			write('Point1: '), write(Point), nl,
+			write('PisoOr: '), write(PisoOr), nl,
+			write('Orig: '), write(Orig), nl,
+			write('PointX: '), write(Point2), nl,
+			write('PisoDest: '), write(PisoDest), nl,
+			write('Dest: '), write(Dest), nl,
+			write('Same floor!'), nl,
+			write('==========================='), nl,
+            aStar(Orig, Dest, Path1, Custo, PisoOr)
+			%Path1 = [a], Custo = 0,
+            %caminho_completo(Point2, Point2, [], Path1)
+        ;
+			(ponto_acesso(Point,PisoDest,New)->
+			write('==========================='), nl,
+			write('Point1: '), write(Point), nl,
+			write('PisoOr: '), write(PisoDest), nl,
+			write('Orig: '), write(New), nl,
+			write('PointX: '), write(Point2), nl,
+			write('PisoDest: '), write(PisoDest), nl,
+			write('Dest: '), write(Dest), nl,
+			write('Same floor!'), nl,
+			write('==========================='), nl,
+			%Path1 = [b], Custo = 1,
+			aStar(New, Dest, Path1, Custo, PisoDest)
+            %caminho_completo(Point2, Point2, [], Path1)
+			);
+            Path1 = [C], Custo = 1
+			%caminho_completo(Point2, Point2, [], Path1)
+        ).
+
 
 caminho_completo(Point1, Point2, [PointX|T], [Path1|RestPath]) :-
 	ponto_acesso(Point1,PisoOr,Orig),
@@ -674,7 +695,7 @@ caminho_completo(Point1, Point2, [PointX|T], [Path1|RestPath]) :-
             caminho_completo(PointX, Point2, T, RestPath)
         ;
 			(ponto_acesso(Point1,PisoDest,New)->
-			write('==========================='), nl,
+			write('=============WM=============='), nl,
 			write('Point1: '), write(Point1), nl,
 			write('PisoOr: '), write(PisoDest), nl,
 			write('Orig: '), write(New), nl,
@@ -684,11 +705,11 @@ caminho_completo(Point1, Point2, [PointX|T], [Path1|RestPath]) :-
 			write('Same floor!'), nl,
 			write('==========================='), nl,
 			%Path1 = [b], Custo = 1,
-			aStar(New, Dest, Path1, Custo, PisoOr),
+			aStar(New, Dest, Path1, Custo, PisoDest),
             caminho_completo(PointX, Point2, T, RestPath)
 			);
             Path1 = [C], Custo = 1,
-            caminho_completo(PointX, Point2, T, RestPath)
+			caminho_completo(PointX, Point2, T, RestPath)
         )
     ).
 	
