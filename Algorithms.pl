@@ -695,7 +695,7 @@ caminho_completo(Point1, Point2, [PointX|T], [Path1|RestPath]) :-
             caminho_completo(PointX, Point2, T, RestPath)
         ;
 			(ponto_acesso(Point1,PisoDest,New)->
-			write('=============WM=============='), nl,
+			write('==========================='), nl,
 			write('Point1: '), write(Point1), nl,
 			write('PisoOr: '), write(PisoDest), nl,
 			write('Orig: '), write(New), nl,
