@@ -10,7 +10,21 @@
 - **No dependencies**
 
 ## 3. Analysis
+**Analyzing this User Story we understand that:**
 
+* A comprehensive study of the state of the art involves both traditional literature review and leveraging generative AI tools, such as ChatGPT.
+
+**Algorithms found:**
+* Algoritmo Genetico
+* Algoritmo ACO (Otimização por Colônia de Formigas)
+* Algoritmos de Enxame (Swarm Intelligence)
+* Algoritmos de Evolução Diferencial (DE - Differential Evolution)
+* Algoritmos de Colônia de Abelhas (ABC - Artificial Bee Colony)
+* Algoritmos de Recozimento Simulado (Simulated Annealing)
+* Algoritmos Meméticos
+* Algoritmos de Otimização por Essência de Fogo (Firefly Algorithm)
+* Algoritmos Culturais
+* Algoritmos de Busca Harmônica (HSA - Harmony Search Algorithm)
 
 ## 4. Implementation
 
