@@ -28,6 +28,7 @@
 
 ## 4. Implementation
 
+**The implementation of this user story will be done in the specific ALGAV document**
 
 ## 5. Observations
 
