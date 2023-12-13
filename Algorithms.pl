@@ -40,6 +40,8 @@ corredor(b,c,b3,c3).
 % Pontos de Acesso
 
 ponto_acesso(a101,a1,cel(2,2)).
+ponto_acesso(a102,a1,cel(4,4)).
+
 ponto_acesso(elev(a1, a2),a1,cel(6,6)).
 
 ponto_acesso(elev(a1, a2),a2,cel(6,6)).
@@ -177,7 +179,7 @@ node(8,2,1,a1).
 
 node(1,3,0,a1).
 node(2,3,0,a1).
-node(3,3,0,a1).
+node(3,3,1,a1).
 node(4,3,0,a1).
 node(5,3,0,a1).
 node(6,3,0,a1).
