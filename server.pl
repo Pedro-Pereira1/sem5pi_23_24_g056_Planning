@@ -561,7 +561,7 @@ aStar2(Dest,[(_,Custo,[Dest|T])|_],Cam,Custo,Piso):-
 
 aStar2(Dest,[(_,Ca,LA)|Outros],Cam,Custo,Piso):-
     write('Segundo aStar2'), nl,
-    write('Piso: '), write(Piso), nl
+    write('Piso: '), write(Piso), nl,
 	LA=[Act|_],
 	findall(( CEX,CaX,[XH|LA]),
 		(Dest\==Act,
