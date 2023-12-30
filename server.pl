@@ -10,6 +10,7 @@
 :- use_module(library(http/json_convert)).
 :- use_module(library(http/http_json)).
 :- use_module(library(http/json)).
+:- use_module(library(gui_tracer)).
 
 % Dynamic Predicates
 :-dynamic building/1. % building(A)...
@@ -45,7 +46,10 @@ get_path(Request):-
     http_parameters(Request, [origem(Origem, []), destino(Destino, [])]),
     atom_string(Origem, Or),
     atom_string(Destino, Dest),
-    %robot_path('elev(A1, A2)', 'elev(A2, A3)', LLigMelhor, LPisMelhor, List),
+    robot_path(Or, Dest, LLigMelhor, LPisMelhor, CamF),
+    R = json([sol1=CamF, sol2=LLigMelhor]),
+    prolog_to_json(R, JSONObject),
+    reply_json(JSONObject, [json_object(dict)]),
     !.
 
 get_data():-
@@ -125,7 +129,7 @@ get_maps() :-
     process_buildings_map(Buildings),
     !.
 
-process_buildings_map([]).
+process_buildings_map([]):-!.
 process_buildings_map([Building|RestBuildings]):-
     elevador(Building, ElevFloors),
     create_elev(ElevFloors),
@@ -135,9 +139,9 @@ process_buildings_map([Building|RestBuildings]):-
 get_building_floors_maps(Building):-
     atom_concat('http://localhost:4000/api/floors/listAllFloors/', Building, Url),
     http_open(Url, ResJSON, [cert_verify_hook(cert_accept_any), status_code(Status)]),
-    handle_http_status(Status, ResJSON, Building).
+    handle_http_status(Status, ResJSON).
 
-handle_http_status(200, ResJSON, Building) :-
+handle_http_status(200, ResJSON) :-
     json_read_dict(ResJSON, ResObj),
     create_map(ResObj).
 
@@ -170,31 +174,31 @@ put_value(0, Piso, Col, Lin, MapObj):-
     assertz(node(Col, Lin, 0, Piso)).
 
 put_value(8, Piso, Col, Lin, MapObj):-
-    assertz(node(Col, Lin, 1, Piso)),
+    assertz(node(Col, Lin, 0, Piso)),
     process_pontos_acesso_room(Piso, Col, Lin, MapObj).
 
 put_value(9, Piso, Col, Lin, MapObj):-
-    assertz(node(Col, Lin, 1, Piso)),
+    assertz(node(Col, Lin, 0, Piso)),
     process_pontos_acesso_room(Piso, Col, Lin, MapObj).
 
 put_value(10, Piso, Col, Lin, MapObj):-
-    assertz(node(Col, Lin, 1, Piso)),
+    assertz(node(Col, Lin, 0, Piso)),
     process_pontos_acesso_room(Piso, Col, Lin, MapObj).
 
 put_value(11, Piso, Col, Lin, MapObj):-
-    assertz(node(Col, Lin, 1, Piso)),
+    assertz(node(Col, Lin, 0, Piso)),
     process_pontos_acesso_room(Piso, Col, Lin, MapObj).
 
 put_value(12, Piso, Col, Lin, MapObj):-
-    assertz(node(Col, Lin, 1, Piso)),
+    assertz(node(Col, Lin, 0, Piso)),
     process_pontos_acesso_cor(Piso, Col, Lin, MapObj).
 
 put_value(13, Piso, Col, Lin, MapObj):-
-    assertz(node(Col, Lin, 1, Piso)),
+    assertz(node(Col, Lin, 0, Piso)),
     process_pontos_acesso_cor(Piso, Col, Lin, MapObj).
 
 put_value(14, Piso, Col, Lin, MapObj):-
-    assertz(node(Col, Lin, 1, Piso)),
+    assertz(node(Col, Lin, 0, Piso)),
     process_pontos_acesso_elev(Piso, Col, Lin).
 
 put_value(_, Piso, Col, Lin, MapObj):-
@@ -205,6 +209,8 @@ process_pontos_acesso_room(FloorId, Col, Lin, MapObj):-
     assertz(ponto_acesso(RoomName, FloorId, cel(Col, Lin))).
 
 get_door_by_coords([], [], _, _, _):-!.
+get_door_by_coords([],_ , _, _, _):-!.
+get_door_by_coords(_, [], _, _, _):-!.
 get_door_by_coords([[X, Y]|T], [RoomName|L], Col, Lin, TheRoom):-
     (X == Col, Y == Lin -> TheRoom = RoomName; get_door_by_coords(T, L, Col, Lin, TheRoom)).
 
@@ -225,14 +231,12 @@ create_pontos_acesso_cor(Col, Lin, FloorId, Passageways, PassCoords):-
     get_passId_by_coords(PassCoords, Col, Lin, PassId),
     get_floor2_of_pass(Passageways, PassId, FloorId, Floor2),
     findall(cor(X, Y), (cor(X, Y), ((X == FloorId , Y == Floor2);(X == Floor2 , Y == FloorId))), Cor),
-    assert_each_ponto_acesso(Cor, FloorId, cel(Col, Lin)),
-    create_pontos_acesso_cor(Rest, Col, Lin, FloorId, T).
+    assert_each_ponto_acesso(Cor, FloorId, cel(Col, Lin)).
 
 assert_each_ponto_acesso([], _, _).
 assert_each_ponto_acesso([X|T], FloorId, Location):-
     \+ ponto_acesso(X, FloorId, _),
-    assertz(ponto_acesso(X, FloorId, Location)),
-    assert_each_ponto_acesso(T, FloorId, Location).
+    assertz(ponto_acesso(X, FloorId, Location)).
 
 
 get_passId_by_coords([], _, _, _):-!.
@@ -280,8 +284,9 @@ matrix_dimensions([Row|Rows], NumRows, NumCols) :-
     NumCols is NumColumns.
 
 delete_maps():-
-    retractall(node(_, _, _, _, _)),
+    retractall(node( _, _, _, _)),
     retractall(edge(_, _, _, _, _)),
+    retractall(lens(_, _, _)),
     retractall(elev(_, _)),
     retractall(ponto_acesso(_, _, _)).
 
@@ -291,7 +296,8 @@ delete_maps():-
 get_passageways():-
     delete_passageways(),
     http_open('http://localhost:4000/api/passageways/listAll', ResJSON, [cert_verify_hook(cert_accept_any), status_code(Status)]),
-    handle_http_status_pass(Status, ResJSON).
+    handle_http_status_pass(Status, ResJSON),
+    !.
 
 handle_http_status_pass(200, ResJSON) :-
     json_read_dict(ResJSON, ResObj),
@@ -556,12 +562,9 @@ aStar(Orig,Dest,Cam,Custo,Piso):-
 
 % Se for preciso apenas o melhor caminho, colocar cut a seguir ao reverse.
 aStar2(Dest,[(_,Custo,[Dest|T])|_],Cam,Custo,Piso):-
-    write('Primeiro aStar2'), nl,
 	reverse([Dest|T],Cam),!.
 
 aStar2(Dest,[(_,Ca,LA)|Outros],Cam,Custo,Piso):-
-    write('Segundo aStar2'), nl,
-    write('Piso: '), write(Piso), nl,
 	LA=[Act|_],
 	findall(( CEX,CaX,[XH|LA]),
 		(Dest\==Act,
@@ -575,7 +578,6 @@ aStar2(Dest,[(_,Ca,LA)|Outros],Cam,Custo,Piso):-
 		CaX is CustoX + Ca,
 		estimativa(XH,Dest,EstX,Piso),
 		CEX is CaX +EstX),Novos),
-    write(Novos), nl,
 	append(Outros,Novos,Todos),
 	sort(Todos,TodosOrd),
 	aStar2(Dest,TodosOrd,Cam,Custo,Piso).
@@ -597,44 +599,39 @@ is_elevador(Point) :-
 caminho_completo(Point, Point, [], [Points]).
 
 caminho_completo(Point, Point2, [],[Path1]):-
-    write('entrou 1'), nl,
 	ponto_acesso(Point,PisoOr,Orig),
 	ponto_acesso(Point2,PisoDest,Dest),
-    write('Point1: '), write(Point), nl,
-    write('Point2: '), write(Point2), nl,
-    write('PisoOr: '), write(PisoOr), nl,
-    write('PisoDest: '), write(PisoDest), nl,
 	 (PisoOr = PisoDest ->
-            writeln('entrou neste'),
-			write('==========================='), nl,
-			write('Point1: '), write(Point), nl,
-			write('PisoOr: '), write(PisoOr), nl,
-			write('Orig: '), write(Orig), nl,
-			write('PointX: '), write(Point2), nl,
-			write('PisoDest: '), write(PisoDest), nl,
-			write('Dest: '), write(Dest), nl,
-			write('Same floor!'), nl,
-			write('==========================='), nl,
-            aStar(Orig, Dest, Path1, Custo, PisoOr),
-            write('Path1: '), write(Path1), nl
+            %writeln('entrou neste'),
+			%write('==========================='), nl,
+			%write('Point1: '), write(Point), nl,
+			%write('PisoOr: '), write(PisoOr), nl,
+			%write('Orig: '), write(Orig), nl,
+			%write('PointX: '), write(Point2), nl,
+			%write('PisoDest: '), write(PisoDest), nl,
+			%write('Dest: '), write(Dest), nl,
+			%write('Same floor!'), nl,
+			%write('==========================='), nl,
+            aStar(Orig, Dest, Path1, Custo, PisoOr)
+            %write('Path1: '), write(Path1), nl
 			%Path1 = [a], Custo = 0,
             %caminho_completo(Point2, Point2, [], Path1)
         ;
 			(ponto_acesso(Point,PisoDest,New)->
-			write('==========================='), nl,
-			write('Point1: '), write(Point), nl,
-			write('PisoOr: '), write(PisoDest), nl,
-			write('Orig: '), write(New), nl,
-			write('PointX: '), write(Point2), nl,
-			write('PisoDest: '), write(PisoDest), nl,
-			write('Dest: '), write(Dest), nl,
-			write('Same floor!'), nl,
-			write('==========================='), nl,
+			%write('==========================='), nl,
+			%write('Point1: '), write(Point), nl,
+			%write('PisoOr: '), write(PisoDest), nl,
+			%write('Orig: '), write(New), nl,
+			%write('PointX: '), write(Point2), nl,
+			%write('PisoDest: '), write(PisoDest), nl,
+			%write('Dest: '), write(Dest), nl,
+			%write('Same floor!'), nl,
+			%write('==========================='), nl,
 			%Path1 = [b], Custo = 1,
-            write('entrou antes do aStar'), nl,
-            write(aStar(New, Dest, Path1, Custo, PisoDest)), nl,
-			aStar(New, Dest, Path1, Custo, PisoDest),
-            write('Path1: '), write(Path1), nl
+            %write('entrou antes do aStar'), nl,
+            %write(aStar(New, Dest, Path1, Custo, PisoDest)), nl,
+			aStar(New, Dest, Path1, Custo, PisoDest)
+            %write('Path1: '), write(Path1), nl
             %caminho_completo(Point2, Point2, [], Path1)
 			);
             Path1 = [C], Custo = 1
@@ -643,10 +640,6 @@ caminho_completo(Point, Point2, [],[Path1]):-
 
 
 caminho_completo(Point1, Point2, [PointX|T], [Path1|RestPath]) :-
-    write('entrou 2'), nl,
-    write('Point1: '), write(Point1), nl,
-    write('PointX: '), write(PointX), nl,
-    write('Point2: '), write(Point2), nl,
 	ponto_acesso(Point1,PisoOr,Orig),
 	ponto_acesso(PointX,PisoDest,Dest),
 
@@ -654,33 +647,33 @@ caminho_completo(Point1, Point2, [PointX|T], [Path1|RestPath]) :-
 		caminho_completo(PointX, Point2, T, RestPath)	
     ;
         (PisoOr = PisoDest ->
-			write('==========================='), nl,
-			write('Point1: '), write(Point1), nl,
-			write('PisoOr: '), write(PisoOr), nl,
-			write('Orig: '), write(Orig), nl,
-			write('PointX: '), write(PointX), nl,
-			write('PisoDest: '), write(PisoDest), nl,
-			write('Dest: '), write(Dest), nl,
-			write('Same floor!'), nl,
-			write('==========================='), nl,
+			%write('==========================='), nl,
+			%write('Point1: '), write(Point1), nl,
+			%write('PisoOr: '), write(PisoOr), nl,
+			%write('Orig: '), write(Orig), nl,
+			%write('PointX: '), write(PointX), nl,
+			%write('PisoDest: '), write(PisoDest), nl,
+			%write('Dest: '), write(Dest), nl,
+			%write('Same floor!'), nl,
+			%write('==========================='), nl,
             aStar(Orig, Dest, Path1, Custo, PisoOr),
 			%Path1 = [a], Custo = 0,
-            write('Path1: '), write(Path1), nl,
+            %write('Path1: '), write(Path1), nl,
             caminho_completo(PointX, Point2, T, RestPath)
         ;
 			(ponto_acesso(Point1,PisoDest,New)->
-			write('==========================='), nl,
-			write('Point1: '), write(Point1), nl,
-			write('PisoOr: '), write(PisoDest), nl,
-			write('Orig: '), write(New), nl,
-			write('PointX: '), write(PointX), nl,
-			write('PisoDest: '), write(PisoDest), nl,
-			write('Dest: '), write(Dest), nl,
-			write('Same floor!'), nl,
-			write('==========================='), nl,
+			%write('==========================='), nl,
+			%write('Point1: '), write(Point1), nl,
+			%write('PisoOr: '), write(PisoDest), nl,
+			%write('Orig: '), write(New), nl,
+			%write('PointX: '), write(PointX), nl,
+			%write('PisoDest: '), write(PisoDest), nl,
+			%write('Dest: '), write(Dest), nl,
+			%write('Same floor!'), nl,
+			%write('==========================='), nl,
 			%Path1 = [b], Custo = 1,
 			aStar(New, Dest, Path1, Custo, PisoDest),
-            write('Path1: '), write(Path1), nl,
+            %write('Path1: '), write(Path1), nl,
             caminho_completo(PointX, Point2, T, RestPath)
 			);
             Path1 = [C], Custo = 1,
@@ -695,6 +688,7 @@ robot_path(P1,P2, LLigMelhor, LPisMelhor, List) :-
 	ponto_acesso(P1,PisoOr,Orig),!,
     write('PisoOr: '), write(PisoOr), nl,
 	ponto_acesso(P2,PisoDest,Dest),
+    write('PisoDest: '), write(PisoDest), nl,
 	melhor_caminho_pisos(PisoOr,PisoDest,LLigMelhor, LPisMelhor),
     write('LLigMelhor: '), write(LLigMelhor), nl,
     write('LPisMelhor: '), write(LPisMelhor), nl,
@@ -712,3 +706,8 @@ count_nodes():-
     node(Col, Lin, Val, Floor),
     format('Node: (~w, ~w, ~w, ~w)~n', [Col, Lin, Val, Floor]),
     fail. % This predicate will fail intentionally to stop backtracking after printing all edges..
+
+write_nodes(Floor):-
+    findall(node(X, Y, Z, Floor), node(X, Y, Z, Floor), Nodes),
+    write('Length: '), length(Nodes, Length), write(Length), nl.
+    %write(Nodes), nl.
