@@ -9,8 +9,12 @@
 :- use_module(library(random)).
 :- use_module(library(http/json_convert)).
 :- use_module(library(http/http_json)).
-:- use_module(library(http/json)).
-:- use_module(library(gui_tracer)).
+:- use_module(library(http/json)). 
+:-setting(http:cors, [*]).
+:-set_prolog_flag(answer_write_options,[max_depth(0)]).
+:-set_prolog_flag(report_error,true).
+:-set_prolog_flag(unknown,error). 
+
 
 % Dynamic Predicates
 :-dynamic building/1. % building(A)...
@@ -42,15 +46,48 @@ stopServer:-
 :- http_handler('/shortestPath', get_path, []).
 
 get_path(Request):-
-    get_data(),
+    cors_enable(Request, [methods([get])]),
+    %get_data(),
     http_parameters(Request, [origem(Origem, []), destino(Destino, [])]),
     atom_string(Origem, Or),
     atom_string(Destino, Dest),
     robot_path(Or, Dest, LLigMelhor, LPisMelhor, CamF),
-    R = json([sol1=CamF, sol2=LLigMelhor]),
-    prolog_to_json(R, JSONObject),
-    reply_json(JSONObject, [json_object(dict)]),
+
+    cells_lists_to_json_object(CamF, LPisMelhor, LLigMelhor, JsonObject),
+
+    reply_json(JsonObject, [json_object(dict)]),
     !.
+
+% Converte a estrutura cel para uma lista
+cel_to_list(cel(X, Y), [X, Y]).
+
+% Converte uma lista de células para uma lista de listas
+list_to_list([], []).
+list_to_list([H|T], [LH|LT]) :-
+    cel_to_list(H, LH),
+    list_to_list(T, LT).
+
+% Converte uma lista de listas de células para uma lista de listas
+lists_to_lists([], []).
+lists_to_lists([H|T], [LH|LT]) :-
+    list_to_list(H, LH),
+    lists_to_lists(T, LT).
+
+cells_lists_to_json_object([], _, _, JsonObject):- 
+    JsonObject = json([cells=[], floorIds=[], accPoints=[]]).
+cells_lists_to_json_object(CellsLists, [], [], JsonObject):- 
+    lists_to_lists(CellsLists, List),
+    JsonObject = json([cells=List, floorIds=[], accPoints=[]]).
+cells_lists_to_json_object(CellsLists, FloorIds, ElevsAndCors, JsonObject) :-
+    lists_to_lists(CellsLists, List),
+    convert_elevs_and_cors(ElevsAndCors, ElevsAndCorsList),
+    JsonObject = json([cells=List, floorIds=FloorIds, accPoints=ElevsAndCorsList]).
+
+convert_elevs_and_cors([], []).
+convert_elevs_and_cors([elev(X,Y)|T], [[X,elev,Y]|ET]) :-
+    convert_elevs_and_cors(T, ET).
+convert_elevs_and_cors([cor(X,Y)|T], [[X,cor,Y]|ET]) :-
+    convert_elevs_and_cors(T, ET).
 
 get_data():-
     get_buildings(),
@@ -686,14 +723,11 @@ caminho_completo(Point1, Point2, [PointX|T], [Path1|RestPath]) :-
 
 robot_path(P1,P2, LLigMelhor, LPisMelhor, List) :-
 	ponto_acesso(P1,PisoOr,Orig),!,
-    write('PisoOr: '), write(PisoOr), nl,
 	ponto_acesso(P2,PisoDest,Dest),
-    write('PisoDest: '), write(PisoDest), nl,
 	melhor_caminho_pisos(PisoOr,PisoDest,LLigMelhor, LPisMelhor),
     write('LLigMelhor: '), write(LLigMelhor), nl,
     write('LPisMelhor: '), write(LPisMelhor), nl,
-	caminho_completo(P1,P2, LLigMelhor, List),
-    write('adeus').
+	caminho_completo(P1,P2, LLigMelhor, List).
 
 %===========================================================================================================
 % Predicate to print all edges
