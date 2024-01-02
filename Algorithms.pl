@@ -749,37 +749,286 @@ print_all_edges(Graph) :-
 :-dynamic estabilizacao_solucao/1.
 :-dynamic melhor_sequencia/1.
 :-dynamic tempo_max/1.
+:-dynamic entre_tarefas/3.
+:-dynamic inicio/1.
+:-use_module(library(random)).
 
-tarefa(t1,a101,d201).	% tarefa(Id,TempoProcessamento).
+tarefa(t1,a101,d201).	% tarefa(Id,Origem, Destino).
 tarefa(t2,a101,a102).
 tarefa(t3,d201,a101).
 tarefa(t4,d201,a102).
 tarefa(t5,a101,d201).
+tarefa(t6,a101,a102).
+tarefa(t7,d201,a101).
+tarefa(t8,d201,a102).
+tarefa(t9,a101,d201).
+tarefa(t10,a101,a102).
+%tarefa(t11,d201,a101).
+%tarefa(t12,d201,a102).
+%tarefa(t13,a101,d201).
+%tarefa(t14,a101,a102).
+%tarefa(t15,d201,a101).
+%tarefa(t16,d201,a102).
+%tarefa(t17,a101,d201).
+%tarefa(t18,a101,a102).
+%tarefa(t19,d201,a101).
+%tarefa(t20,d201,a102).
+%tarefa(t21,a101,d201).
+%tarefa(t22,a101,a102).
+%tarefa(t23,d201,a101).
+%tarefa(t24,d201,a102).
+%tarefa(t25,a101,d201).
+%tarefa(t26,a101,a102).
+%tarefa(t27,d201,a101).
+%tarefa(t28,d201,a102).
+%tarefa(t29,a101,d201).
+%tarefa(t30,a101,a102).
+%tarefa(t31,d201,a101).
+%tarefa(t32,d201,a102).
+%tarefa(t33,a101,d201).
+%tarefa(t34,a101,a102).
+%tarefa(t35,d201,a101).
+%tarefa(t36,d201,a102).
+%tarefa(t37,a101,d201).
+%tarefa(t38,a101,a102).
+%tarefa(t39,d201,a101).
+%tarefa(t40,d201,a102).
+%tarefa(t41,a101,d201).
+%tarefa(t42,a101,a102).
+%tarefa(t43,d201,a101).
+%tarefa(t44,d201,a102).
+%tarefa(t45,a101,d201).
+%tarefa(t46,a101,a102).
+%tarefa(t47,d201,a101).
+%tarefa(t48,d201,a102).
+%tarefa(t49,a101,d201).
+%tarefa(t50,a101,a102).
+
+generate_entre_tarefas(_, 0):- !.
+generate_entre_tarefas(First, Max) :-
+    Max \= First,
+	atom_concat('t', First, Task1),
+    atom_concat('t', Max, Task2),
+    random(1, 16, Time),
+    asserta(entre_tarefas(Task1, Task2, Time)),
+	Max1 is Max - 1,
+	generate_entre_tarefas(First, Max1).
 
 entre_tarefas(t1,t2,3).	% tarefa(Id, IdTarefa1, IdTarefa2, TempoProcessamento).
 entre_tarefas(t1,t3,1).
 entre_tarefas(t1,t4,6).
 entre_tarefas(t1,t5,4).
-
+entre_tarefas(t1,t6,2).
+entre_tarefas(t1,t7,5).
+entre_tarefas(t1,t8,1).
+entre_tarefas(t1,t9,2).
+entre_tarefas(t1,t10,5).
+%entre_tarefas(t1,t11,1).
+%entre_tarefas(t1,t12,8).
+%entre_tarefas(t1,t13,2).
+%entre_tarefas(t1,t14,5).
+%entre_tarefas(t1,t15,1).
+%entre_tarefas(t1,t16,8).
+%entre_tarefas(t1,t17,2).
+%entre_tarefas(t1,t18,5).
+%entre_tarefas(t1,t19,1).
+%entre_tarefas(t1,t20,8).
+%entre_tarefas(t1,t21,2).
+%entre_tarefas(t1,t22,5).
+%entre_tarefas(t1,t23,1).
+%entre_tarefas(t1,t24,8).
+%entre_tarefas(t1,t25,2).
+%entre_tarefas(t1,t26,5).
+%entre_tarefas(t1,t27,1).
+%entre_tarefas(t1,t28,8).
+%entre_tarefas(t1,t29,2).
+%entre_tarefas(t1,t30,5).
+%entre_tarefas(t1,t31,1).
+%entre_tarefas(t1,t32,8).
+%entre_tarefas(t1,t33,2).
+%entre_tarefas(t1,t34,5).
+%entre_tarefas(t1,t35,1).
+%entre_tarefas(t1,t36,8).
+%entre_tarefas(t1,t37,2).
+%entre_tarefas(t1,t38,5).
+%entre_tarefas(t1,t39,1).
+%entre_tarefas(t1,t40,8).
+%entre_tarefas(t1,t41,2).
+%entre_tarefas(t1,t42,5).
+%entre_tarefas(t1,t43,1).
+%entre_tarefas(t1,t44,8).
+%entre_tarefas(t1,t45,2).
+%entre_tarefas(t1,t46,5).
+%entre_tarefas(t1,t47,1).
+%entre_tarefas(t1,t48,8).
+%entre_tarefas(t1,t49,2).
+%entre_tarefas(t1,t50,5).
+%
 entre_tarefas(t2,t1,1).
 entre_tarefas(t2,t3,6).
 entre_tarefas(t2,t4,9).
 entre_tarefas(t2,t5,3).
+entre_tarefas(t2,t6,2).
+entre_tarefas(t2,t7,5).
+entre_tarefas(t2,t8,1).
+entre_tarefas(t2,t9,2).
+entre_tarefas(t2,t10,5).
+%entre_tarefas(t2,t11,1).
+%entre_tarefas(t2,t12,8).
+%entre_tarefas(t2,t13,2).
+%entre_tarefas(t2,t14,5).
+%entre_tarefas(t2,t15,1).
+%entre_tarefas(t2,t16,8).
+%entre_tarefas(t2,t17,2).
+%entre_tarefas(t2,t18,5).
+%entre_tarefas(t2,t19,1).
+%entre_tarefas(t2,t20,8).
+%entre_tarefas(t2,t21,2).
+%entre_tarefas(t2,t22,5).
+%entre_tarefas(t2,t23,1).
+%entre_tarefas(t2,t24,8).
+%entre_tarefas(t2,t25,2).
+%entre_tarefas(t2,t26,5).
+%entre_tarefas(t2,t27,1).
+%entre_tarefas(t2,t28,8).
+%entre_tarefas(t2,t29,2).
+%entre_tarefas(t2,t30,5).
+%entre_tarefas(t2,t31,1).
+%entre_tarefas(t2,t32,8).
+%entre_tarefas(t2,t33,2).
+%entre_tarefas(t2,t34,5).
+%entre_tarefas(t2,t35,1).
+%entre_tarefas(t2,t36,8).
+%entre_tarefas(t2,t37,2).
+%entre_tarefas(t2,t38,5).
+%entre_tarefas(t2,t39,1).
+%entre_tarefas(t2,t40,8).
+%entre_tarefas(t2,t41,2).
+%entre_tarefas(t2,t42,5).
+%entre_tarefas(t2,t43,1).
+%entre_tarefas(t2,t44,8).
+%entre_tarefas(t2,t45,2).
+%entre_tarefas(t2,t46,5).
+%entre_tarefas(t2,t47,1).
+%entre_tarefas(t2,t48,8).
+%entre_tarefas(t2,t49,2).
+%entre_tarefas(t2,t50,5).
+
 
 entre_tarefas(t3,t1,2).
 entre_tarefas(t3,t2,5).
 entre_tarefas(t3,t4,1).
 entre_tarefas(t3,t5,5).
+entre_tarefas(t3,t6,2).
+entre_tarefas(t3,t7,5).
+entre_tarefas(t3,t8,1).
+entre_tarefas(t3,t9,2).
+entre_tarefas(t3,t10,5).
+%entre_tarefas(t3,t11,1).
+%entre_tarefas(t3,t12,8).
+%entre_tarefas(t3,t13,2).
+%entre_tarefas(t3,t14,5).
+%entre_tarefas(t3,t15,1).
+%entre_tarefas(t3,t16,8).
+%entre_tarefas(t3,t17,2).
+%entre_tarefas(t3,t18,5).
+%entre_tarefas(t3,t19,1).
+%entre_tarefas(t3,t20,8).
+%entre_tarefas(t3,t21,2).
+%entre_tarefas(t3,t22,5).
+%entre_tarefas(t3,t23,1).
+%entre_tarefas(t3,t24,8).
+%entre_tarefas(t3,t25,2).
+%entre_tarefas(t3,t26,5).
+%entre_tarefas(t3,t27,1).
+%entre_tarefas(t3,t28,8).
+%entre_tarefas(t3,t29,2).
+%entre_tarefas(t3,t30,5).
+%entre_tarefas(t3,t31,1).
+%entre_tarefas(t3,t32,8).
+%entre_tarefas(t3,t33,2).
+
 
 entre_tarefas(t4,t1,3).
 entre_tarefas(t4,t2,2).
 entre_tarefas(t4,t3,1).
 entre_tarefas(t4,t5,7).
+entre_tarefas(t4,t6,2).
+entre_tarefas(t4,t7,5).
+entre_tarefas(t4,t8,1).
+entre_tarefas(t4,t9,2).
+entre_tarefas(t4,t10,5).
 
 entre_tarefas(t5,t1,2).
 entre_tarefas(t5,t2,5).
 entre_tarefas(t5,t3,1).
 entre_tarefas(t5,t4,8).
+entre_tarefas(t5,t6,2).
+entre_tarefas(t5,t7,5).
+entre_tarefas(t5,t8,1).
+entre_tarefas(t5,t9,2).
+entre_tarefas(t5,t10,5).
+
+
+entre_tarefas(t6,t1,2).
+entre_tarefas(t6,t2,5).
+entre_tarefas(t6,t3,1).
+entre_tarefas(t6,t4,8).
+%% create more entre_tarefas, randomize the TempoProcessamento with a number between 1 and 15
+entre_tarefas(t6,t5,2).
+entre_tarefas(t6,t7,5).
+entre_tarefas(t6,t8,1).
+entre_tarefas(t6,t9,2).
+entre_tarefas(t6,t10,5).
+
+%% create more entre_tarefas, randomize the TempoProcessamento with a number between 1 and 15
+entre_tarefas(t7,t1,2).
+entre_tarefas(t7,t2,5).
+entre_tarefas(t7,t3,1).
+entre_tarefas(t7,t4,8).
+entre_tarefas(t7,t5,2).
+entre_tarefas(t7,t6,5).
+entre_tarefas(t7,t8,1).
+entre_tarefas(t7,t9,2).
+entre_tarefas(t7,t10,5).
+
+%% create more entre_tarefas, randomize the TempoProcessamento with a number between 1 and 15
+entre_tarefas(t8,t1,2).
+entre_tarefas(t8,t2,5).
+entre_tarefas(t8,t3,1).
+entre_tarefas(t8,t4,8).
+entre_tarefas(t8,t5,2).
+entre_tarefas(t8,t6,5).
+entre_tarefas(t8,t7,1).
+entre_tarefas(t8,t9,2).
+entre_tarefas(t8,t10,5).
+
+%% create more entre_tarefas, randomize the TempoProcessamento with a number between 1 and 15
+entre_tarefas(t9,t1,2).
+entre_tarefas(t9,t2,5).
+entre_tarefas(t9,t3,1).
+entre_tarefas(t9,t4,8).
+entre_tarefas(t9,t5,2).
+entre_tarefas(t9,t6,5).
+entre_tarefas(t9,t7,1).
+entre_tarefas(t9,t8,2).
+entre_tarefas(t9,t10,5).
+
+%% create more entre_tarefas, randomize the TempoProcessamento with a number between 1 and 15
+entre_tarefas(t10,t1,2).
+entre_tarefas(t10,t2,5).
+entre_tarefas(t10,t3,1).
+entre_tarefas(t10,t4,8).
+entre_tarefas(t10,t5,2).
+entre_tarefas(t10,t6,5).
+entre_tarefas(t10,t7,1).
+entre_tarefas(t10,t8,2).
+entre_tarefas(t10,t9,5).
+
+
+
+%% create more entre_tarefas, randomize the TempoProcessamento with a number between 1 and 15
+
 
 % tarefas(NTarefas).
 tarefas(5).
@@ -808,13 +1057,14 @@ inicializa:-
 	estabilizacao_solucao(70).
 
 	% Tempo maximo de execucao
-	tempo_max(60).
+	tempo_max(50).
 
 gera:-
 	(retract(inicio(_));true),
 	get_time(V),
 	asserta(inicio(V)),
 	inicializa,
+	%trace,
 	gera_populacao(Pop),
 	write('Pop='),write(Pop),nl,
 	avalia_populacao(Pop,PopAv),
@@ -1105,9 +1355,9 @@ process_task(Task,[NextTask|Rest]):-
 %===========================================================================================================
 % Predicate to process task list
 
-process_task_list(Lista, Index):- Index >= length(Lista), !.
+process_task_list(Lista, Index):- length(Lista, Tam), Index >= Tam, !.
 process_task_list([Task|Rest], Index):-
-	%trace,
+	trace,
     process_task(Task, Rest),
     move_para_inicio(Index, [Task|Rest], NewList),
     Index2 is Index + 1,
@@ -1133,3 +1383,32 @@ move_para_inicio(X, Lista, NovaLista) :-
 %    gera,
 %    json_to_prolog(JsonOut, Lista2),
 %    reply_json_dict(JsonOut).
+
+
+
+
+
+
+
+
+
+duracao_total([T], 0).
+duracao_total([T1, T2 | Ts], Duracao) :-
+    entre_tarefas(T1, T2, TempoTransicao),
+    duracao_total([T2 | Ts], DuracaoResto),
+    Duracao is  TempoTransicao + DuracaoResto.
+
+% Encontra a sequência de tarefas com a menor duração total
+melhor_sequencia(Seq, MelhorDuracao) :-
+	%trace,
+	get_time(Inicio),
+    findall(T, tarefa(T, _, _), Tarefas),
+    permutation(Tarefas, Seq),
+    duracao_total(Seq, Duracao),
+    \+ (permutation(Tarefas, OutraSeq),
+        duracao_total(OutraSeq, OutraDuracao),
+        OutraDuracao < Duracao),
+    MelhorDuracao = Duracao,
+	get_time(Fim),
+	TSol is Fim-Inicio,
+	write('Duracao: '), write(TSol),nl.
