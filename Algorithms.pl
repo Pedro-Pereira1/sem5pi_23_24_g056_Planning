@@ -1048,3 +1048,60 @@ mutacao23(G1,1,[G2|Ind],G2,[G1|Ind]):-!.
 mutacao23(G1,P,[G|Ind],G2,[G|NInd]):-
 	P1 is P-1,
 	mutacao23(G1,P1,Ind,G2,NInd).
+
+%===========================================================================================================
+% Predicate to generate task execution sequence
+
+task_time(Task, Start, End, Time, _):-
+
+
+
+
+%===========================================================================================================
+% Predicate to get the time between tasks
+
+between_tasks_time(PAInicial, PAFinal, Id1, Id2):-
+    robot_path(PAInicial, PAFinal, LLigMelhor, LPisMelhor, Caminho, Custo),
+    assertz(entre_tarefas(Id1, Id2, Custo)).
+
+%===========================================================================================================
+% Predicate to process task
+
+process_task( _, []).
+process_task(Task,[NextTask|Rest]):-
+    tarefa(Task, Start, End),
+    tarefa(NextTask, NextStart, NextEnd),
+    between_tasks_time(End, NextStart, Task, NextTask),
+    process_task(Task, Rest).
+
+%===========================================================================================================
+% Predicate to process task list
+
+process_task_list([]).
+process_task_list([Task|Rest], Index):-
+    process_task(Task, Rest),
+    move_para_inicio(Index, [Task|Rest], NewList),
+    Index2 is Index + 1,
+    process_task_list(NewList, Index2).
+
+%===========================================================================================================
+% Predicate to sort task list
+
+move_para_inicio(X, Lista, NovaLista) :-
+    nth1(X, Lista, Elemento),
+    delete(Lista, Elemento, ListaTemp),
+    NovaLista = [Elemento|ListaTemp].
+
+%===========================================================================================================
+% Predicate to call task list processing
+
+:- http_handler('/taskSequence', get_task_sequence, []).
+
+get_task_sequence(Request) :-
+    http_read_json_dict(Request, JsonIn),
+    json_to_prolog(JsonIn, TaskList),
+    process_task_list(TaskList, 0),
+    gera,
+    json_to_prolog(JsonOut, Lista2),
+    reply_json_dict(JsonOut).
+
