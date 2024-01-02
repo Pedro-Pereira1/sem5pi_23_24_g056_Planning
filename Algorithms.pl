@@ -638,9 +638,9 @@ is_elevador(Point) :-
     ElevadorType = elev(_, _).
 
 
-caminho_completo(Point, Point, [], [Points]).
+caminho_completo(Point, Point, [], [Points], Custo).
 
-caminho_completo(Point, Point2, [],[Path1]):-
+caminho_completo(Point, Point2, [],[Path1], Custo):-
 	ponto_acesso(Point,PisoOr,Orig),
 	ponto_acesso(Point2,PisoDest,Dest),
 	 (PisoOr = PisoDest ->
@@ -676,11 +676,12 @@ caminho_completo(Point, Point2, [],[Path1]):-
         ).
 
 
-caminho_completo(Point1, Point2, [PointX|T], [Path1|RestPath]) :-
+caminho_completo(Point1, Point2, [PointX|T], [Path1|RestPath], Custo) :-
 	ponto_acesso(Point1,PisoOr,Orig),
 	ponto_acesso(PointX,PisoDest,Dest),
 	(is_elevador(Point1), is_elevador(PointX) ->
-		caminho_completo(PointX, Point2, T, RestPath)	
+		caminho_completo(PointX, Point2, T, RestPath,SubCost),
+		Custo is SubCost	
     ;
         (PisoOr = PisoDest ->
 			write('==========================='), nl,
@@ -692,9 +693,10 @@ caminho_completo(Point1, Point2, [PointX|T], [Path1|RestPath]) :-
 			write('Dest: '), write(Dest), nl,
 			write('Same floor!'), nl,
 			write('==========================='), nl,
-            aStar(Orig, Dest, Path1, Custo, PisoOr),
+            aStar(Orig, Dest, Path1, SubCost, PisoOr),
 			%Path1 = [a], Custo = 0,
-            caminho_completo(PointX, Point2, T, RestPath)
+            caminho_completo(PointX, Point2, T, RestPath, RemainingCost),
+			 Custo is SubCost + RemainingCost
         ;
 			(ponto_acesso(Point1,PisoDest,New)->
 			write('==========================='), nl,
@@ -707,22 +709,24 @@ caminho_completo(Point1, Point2, [PointX|T], [Path1|RestPath]) :-
 			write('Same floor!'), nl,
 			write('==========================='), nl,
 			%Path1 = [b], Custo = 1,
-			aStar(New, Dest, Path1, Custo, PisoDest),
-            caminho_completo(PointX, Point2, T, RestPath)
+			aStar(New, Dest, Path1, SubCost, PisoDest),
+            caminho_completo(PointX, Point2, T, RestPath, RemainingCost),
+			Custo is SubCost + RemainingCost
 			);
             Path1 = [C], Custo = 1,
-			caminho_completo(PointX, Point2, T, RestPath)
+			caminho_completo(PointX, Point2, T, RestPath, RemainingCost),
+        	Custo is SubCost + RemainingCost
         )
     ).
 	
 %===========================================================================================================
 % RobotPath -> caminho entre dois pontos de acesso
 
-robot_path(P1,P2, LLigMelhor, LPisMelhor, List) :-
+robot_path(P1,P2, LLigMelhor, LPisMelhor, List, CAM) :-
 	ponto_acesso(P1,PisoOr,Orig),
 	ponto_acesso(P2,PisoDest,Dest),
 	melhor_caminho_pisos(PisoOr,PisoDest,LLigMelhor, LPisMelhor),
-	caminho_completo(P1,P2, LLigMelhor, List).
+	caminho_completo(P1,P2, LLigMelhor, List, CAM).
 
 %===========================================================================================================
 % Predicate to print all edges
