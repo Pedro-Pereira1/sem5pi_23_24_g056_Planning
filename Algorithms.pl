@@ -739,6 +739,8 @@ print_all_edges(Graph) :-
 :-dynamic populacao/1.
 :-dynamic prob_cruzamento/1.
 :-dynamic prob_mutacao/1.
+:-dynamic estabilizacao_solucao/1.
+:-dynamic melhor_sequencia/1.
 
 
 tarefa(t1,2).	% tarefa(Id,TempoProcessamento).
@@ -772,15 +774,12 @@ entre_tarefas(t5,t2,5).
 entre_tarefas(t5,t3,1).
 entre_tarefas(t5,t4,8).
 
-estabilizacao_solucao(75).
-
 % tarefas(NTarefas).
 tarefas(5).
 
-% parameteriza��o
+% parameterizacao
 inicializa:-
 	%write('Numero de novas Geracoes: '),read(NG), 
-	
 	NG is 100,
 	(retract(geracoes(_));true), asserta(geracoes(NG)),
 
@@ -798,13 +797,14 @@ inicializa:-
 	PM is 2/100,
 	(retract(prob_mutacao(_));true), asserta(prob_mutacao(PM)).
 
+	% Estabilizacao da solucao
+	estabilizacao_solucao(75).
 
 gera:-
 	inicializa,
 	gera_populacao(Pop),
 	write('Pop='),write(Pop),nl,
 	avalia_populacao(Pop,PopAv),
-	%trace,
 	write('PopAv='),write(PopAv),nl,
 	ordena_populacao(PopAv,PopOrd),
 	geracoes(NG),
@@ -875,19 +875,21 @@ btroca([X|L1],[X|L2]):-btroca(L1,L2).
 
 % Numero de geracoes maximo atingido.
 gera_geracao(G,G,Pop,_):-!,
-	write('Gera��o '), write(G), write(':'), nl, write(Pop), nl,
-	write('Numero de geracoes maximo atingido!').
+	write('Geracao '), write(G), write(':'), nl, write(Pop), nl,
+	Pop = [Lista*Tempo|_],
+	(retractall(melhor_sequencia(_,_)),!;true),
+	asserta(melhor_sequencia(Lista, Tempo)),
+	write('Numero maximo de geracoes atingido!').
 
 % Numero de estabilizacao maximo atingido.
 gera_geracao(N,_,Pop,[_,_,X]):-
 	estabilizacao_solucao(X),
 	!,
 	write('Geracao '), write(N), write(':'), nl, write(Pop), nl,
-	%Pop = [Lista*Tempo|_],
-	%(retractall(bto(_,_)),!;true),
-	%asserta(bto(Lista, Tempo)).
+	Pop = [Lista*Tempo|_],
+	(retractall(melhor_sequencia(_,_)),!;true),
+	asserta(melhor_sequencia(Lista, Tempo)).
 	write('Estabilizacao maxima atingida!').
-	% asserta(melhor_individuo()).
 
 gera_geracao(N,G,Pop,[SolAct,SolAct,X]):-
 	X2 is X+1,
@@ -897,7 +899,6 @@ gera_geracao(N,G,Pop,[SolAnt,SolAct,_]):-
 	gera_geracao2(N,G,Pop,[SolAnt,SolAct,1]).
 
 gera_geracao2(N, G, Pop, [_, SolAct, X]):-
-	%trace,
 	%write('Geracao '), write(N), write(':'), nl, write(Pop), nl,
 	cruzamento(Pop,NPop1,1),
 	NPop1 = [NSol|_],
@@ -920,18 +921,9 @@ gerar_pontos_cruzamento1(P1,P2):-
 gerar_pontos_cruzamento1(P1,P2):-
 	gerar_pontos_cruzamento1(P1,P2).
 
-
-% Passar sempre o melhor indivíduo + fazer cruzamentos aleatórios e nao sucessivos (1º com 2º, 3º com 4º...)
 cruzamento([],[],_).
 
 %cruzamento([Ind*_],[Ind],_).
-
-% Predicado intermédio que vai garantir que:
-%  1 - O melhor indíviduo é passado para a próxima geracao;
-%  2 - Nao sao cruzados pares consecutivos (1º e 2º, 3º e 4º...).
-% Como?
-%  1 - Se se tratar do primeiro índice, ou seja, indivíduo com melhor prestacao, vai ser diretamente passado para a próxima geracao;
-%  2 - É feito um shuffle à lista (excepto o melhor indivíduo).
 cruzamento([Ind1*_|Resto], [Ind1|Resto1], 1):-
 	!,
 	random_permutation(Resto, RestoBaralhado),
