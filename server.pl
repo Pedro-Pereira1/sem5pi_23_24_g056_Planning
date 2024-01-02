@@ -9,7 +9,7 @@
 :- use_module(library(random)).
 :- use_module(library(http/json_convert)).
 :- use_module(library(http/http_json)).
-:- use_module(library(http/json)). 
+:- use_module(library(http/json)).
 :-set_prolog_flag(answer_write_options,[max_depth(0)]).
 :-set_prolog_flag(report_error,true).
 :-set_prolog_flag(unknown,error). 
@@ -59,7 +59,7 @@ init:-
 stop:-
     stopServer.
 
-% Criacao de servidor HTTP no porto 'Port'					
+% Criacao de servidor HTTP no porto 'Port'
 % Gerir servidor
 startServer(Port) :-
     http_server(http_dispatch, [port(Port)]),
@@ -757,3 +757,60 @@ write_nodes(Floor):-
     findall(node(X, Y, Z, Floor), node(X, Y, Z, Floor), Nodes),
     write('Length: '), length(Nodes, Length), write(Length), nl.
     %write(Nodes), nl.
+
+%===========================================================================================================
+% Predicate to generate task execution sequence
+
+task_time(Task, Start, End, Time, _):-
+
+
+
+
+%===========================================================================================================
+% Predicate to get the time between tasks
+
+between_tasks_time(PAInicial, PAFinal, Id1, Id2):-
+    robot_path(PAInicial, PAFinal, LLigMelhor, LPisMelhor, Caminho, Custo),
+    assertz(entre_tarefas(Id1, Id2, Custo)).
+
+%===========================================================================================================
+% Predicate to process task
+
+process_task( _, []).
+process_task(Task,[NextTask|Rest]):-
+    tarefa(Task, Start, End),
+    tarefa(NextTask, NextStart, NextEnd),
+    between_tasks_time(End, NextStart, Task, NextTask),
+    process_task(Task, Rest).
+
+%===========================================================================================================
+% Predicate to process task list
+
+process_task_list([]).
+process_task_list([Task|Rest], Index):-
+    process_task(Task, Rest),
+    move_para_inicio(Index, [Task|Rest], NewList),
+    Index2 is Index + 1,
+    process_task_list(NewList, Index2).
+
+%===========================================================================================================
+% Predicate to sort task list
+
+move_para_inicio(X, Lista, NovaLista) :-
+    nth1(X, Lista, Elemento),
+    delete(Lista, Elemento, ListaTemp),
+    NovaLista = [Elemento|ListaTemp].
+
+%===========================================================================================================
+% Predicate to call task list processing
+
+:- http_handler('/taskSequence', get_task_sequence, []).
+
+get_task_sequence(Request) :-
+    http_read_json_dict(Request, JsonIn),
+    json_to_prolog(JsonIn, TaskList),
+    process_task_list(TaskList, 0),
+    gera,
+    json_to_prolog(JsonOut, Lista2),
+    reply_json_dict(JsonOut).
+
