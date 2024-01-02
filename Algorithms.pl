@@ -56,6 +56,9 @@ ponto_acesso(cor(c2, d2),c2,cel(7,7)).
 ponto_acesso(cor(c2, d2),d2,cel(7,1)).
 ponto_acesso(d201,d2,cel(1,4)).
 
+ponto_acesso(cor(d2, b2),b2,cel(5,7)).
+ponto_acesso(cor(d2, b2),d2,cel(7,1)).
+
 % A
 %pa(APF,a1,0,1).
 %pa(Beng,a1,0,1).
@@ -745,13 +748,13 @@ print_all_edges(Graph) :-
 :-dynamic prob_mutacao/1.
 :-dynamic estabilizacao_solucao/1.
 :-dynamic melhor_sequencia/1.
+:-dynamic tempo_max/1.
 
-
-tarefa(t1,2).	% tarefa(Id,TempoProcessamento).
-tarefa(t2,4).
-tarefa(t3,1).
-tarefa(t4,3).
-tarefa(t5,3).
+tarefa(t1,a101,d201).	% tarefa(Id,TempoProcessamento).
+tarefa(t2,a101,a102).
+tarefa(t3,d201,a101).
+tarefa(t4,d201,a102).
+tarefa(t5,a101,d201).
 
 entre_tarefas(t1,t2,3).	% tarefa(Id, IdTarefa1, IdTarefa2, TempoProcessamento).
 entre_tarefas(t1,t3,1).
@@ -798,13 +801,19 @@ inicializa:-
 
 	%write('Probabilidade de Mutacao (%):'), 
 	%read(P2), PM is P2/100, 
-	PM is 2/100,
+	PM is 5/100,
 	(retract(prob_mutacao(_));true), asserta(prob_mutacao(PM)).
 
 	% Estabilizacao da solucao
-	estabilizacao_solucao(75).
+	estabilizacao_solucao(70).
+
+	% Tempo maximo de execucao
+	tempo_max(60).
 
 gera:-
+	(retract(inicio(_));true),
+	get_time(V),
+	asserta(inicio(V)),
 	inicializa,
 	gera_populacao(Pop),
 	write('Pop='),write(Pop),nl,
@@ -818,7 +827,7 @@ gera:-
 gera_populacao(Pop):-
 	populacao(TamPop),
 	tarefas(NumT),
-	findall(Tarefa,tarefa(Tarefa,_),ListaTarefas),
+	findall(Tarefa,tarefa(Tarefa,_,_),ListaTarefas),
 	gera_populacao(TamPop,ListaTarefas,NumT,Pop).
 
 gera_populacao(0,_,_,[]):-!.
@@ -892,8 +901,19 @@ gera_geracao(N,_,Pop,[_,_,X]):-
 	write('Geracao '), write(N), write(':'), nl, write(Pop), nl,
 	Pop = [Lista*Tempo|_],
 	(retractall(melhor_sequencia(_,_)),!;true),
-	asserta(melhor_sequencia(Lista, Tempo)).
+	asserta(melhor_sequencia(Lista, Tempo)),
 	write('Estabilizacao maxima atingida!').
+
+% Tempo maximo atingido.
+gera_geracao(N,_,Pop,_):-
+	get_time(Tempo),
+	verifica_tempo(Tempo),
+	!,
+	write('Geracao '), write(N), write(':'), nl, write(Pop), nl,
+	Pop = [Lista*Tempo|_],
+	(retractall(melhor_sequencia(_,_)),!;true),
+	asserta(melhor_sequencia(Lista, Tempo)),
+	write('Tempo maximo atingido!').
 
 gera_geracao(N,G,Pop,[SolAct,SolAct,X]):-
 	X2 is X+1,
@@ -903,7 +923,7 @@ gera_geracao(N,G,Pop,[SolAnt,SolAct,_]):-
 	gera_geracao2(N,G,Pop,[SolAnt,SolAct,1]).
 
 gera_geracao2(N, G, Pop, [_, SolAct, X]):-
-	%write('Geracao '), write(N), write(':'), nl, write(Pop), nl,
+	write('Geracao '), write(N), write(':'), nl, write(Pop), nl,
 	cruzamento(Pop,NPop1,1),
 	NPop1 = [NSol|_],
 	mutacao(NPop1,NPop,1),
@@ -911,6 +931,11 @@ gera_geracao2(N, G, Pop, [_, SolAct, X]):-
 	ordena_populacao(NPopAv,NPopOrd),
 	N1 is N+1,
 	gera_geracao(N1,G,NPopOrd,[SolAct, NSol, X]).
+
+verifica_tempo(TempoAct):-
+	inicio(Ini),
+	tempo_max(Max),
+	TempoAct - Ini >= Max.
 
 gerar_pontos_cruzamento(P1,P2):-
 	gerar_pontos_cruzamento1(P1,P2).
@@ -927,7 +952,6 @@ gerar_pontos_cruzamento1(P1,P2):-
 
 cruzamento([],[],_).
 
-%cruzamento([Ind*_],[Ind],_).
 cruzamento([Ind1*_|Resto], [Ind1|Resto1], 1):-
 	!,
 	random_permutation(Resto, RestoBaralhado),
@@ -1056,7 +1080,7 @@ mutacao23(G1,P,[G|Ind],G2,[G|NInd]):-
 %===========================================================================================================
 % Predicate to generate task execution sequence
 
-task_time(Task, Start, End, Time, _):-
+task_time(Task, Start, End, Time, _).
 
 
 
@@ -1081,8 +1105,9 @@ process_task(Task,[NextTask|Rest]):-
 %===========================================================================================================
 % Predicate to process task list
 
-process_task_list([],_).
+process_task_list(Lista, Index):- Index >= length(Lista), !.
 process_task_list([Task|Rest], Index):-
+	%trace,
     process_task(Task, Rest),
     move_para_inicio(Index, [Task|Rest], NewList),
     Index2 is Index + 1,
@@ -1099,13 +1124,12 @@ move_para_inicio(X, Lista, NovaLista) :-
 %===========================================================================================================
 % Predicate to call task list processing
 
-:- http_handler('/taskSequence', get_task_sequence, []).
-
-get_task_sequence(Request) :-
-    http_read_json_dict(Request, JsonIn),
-    json_to_prolog(JsonIn, TaskList),
-    process_task_list(TaskList, 0),
-    gera,
-    json_to_prolog(JsonOut, Lista2),
-    reply_json_dict(JsonOut).
-
+%:- http_handler('/taskSequence', get_task_sequence, []).
+%
+%get_task_sequence(Request) :-
+%    http_read_json_dict(Request, JsonIn),
+%    json_to_prolog(JsonIn, TaskList),
+%    process_task_list(TaskList, 0),
+%    gera,
+%    json_to_prolog(JsonOut, Lista2),
+%    reply_json_dict(JsonOut).
