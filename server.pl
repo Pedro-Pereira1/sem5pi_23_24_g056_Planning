@@ -786,7 +786,7 @@ process_task(Task,[NextTask|Rest]):-
 %===========================================================================================================
 % Predicate to process task list
 
-process_task_list([]).
+process_task_list([],_).
 process_task_list([Task|Rest], Index):-
     process_task(Task, Rest),
     move_para_inicio(Index, [Task|Rest], NewList),
