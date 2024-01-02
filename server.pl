@@ -10,11 +10,11 @@
 :- use_module(library(http/json_convert)).
 :- use_module(library(http/http_json)).
 :- use_module(library(http/json)). 
-:-set_setting(http:cors, [*]).
 :-set_prolog_flag(answer_write_options,[max_depth(0)]).
 :-set_prolog_flag(report_error,true).
 :-set_prolog_flag(unknown,error). 
 
+:-set_setting(http:cors, [*]).
 
 % Dynamic Predicates
 :-dynamic building/1. % building(A)...
@@ -33,6 +33,32 @@
 :-dynamic ponto_acesso/3. % ponto_acesso(Ponto, Floor, Cel)...
 :-dynamic lens/3. % lens(piso, col, lin)...
 
+:- http_handler('/shortestPath', get_path, []).
+
+get_path(Request):-
+    cors_enable(Request, [methods([get])]),
+    %get_data(),
+    http_parameters(Request,
+        [
+            origem(Origem, []),
+            destino(Destino, [])
+        ]),
+    atom_string(Origem, Or),
+    atom_string(Destino, Dest),
+    robot_path(Or, Dest, LLigMelhor, LPisMelhor, CamF),
+
+    cells_lists_to_json_object(CamF, LPisMelhor, LLigMelhor, JsonObject),
+
+    reply_json(JsonObject, [json_object(dict)]),
+    !.
+
+init:-
+    startServer(7000),
+    get_data().
+
+stop:-
+    stopServer.
+
 % Criacao de servidor HTTP no porto 'Port'					
 % Gerir servidor
 startServer(Port) :-
@@ -43,20 +69,6 @@ stopServer:-
     retract(port(Port)),
     http_stop_server(Port,_).
 
-:- http_handler('/shortestPath', get_path, []).
-
-get_path(Request):-
-    cors_enable(Request, [methods([get])]),
-    %get_data(),
-    http_parameters(Request, [origem(Origem, []), destino(Destino, [])]),
-    atom_string(Origem, Or),
-    atom_string(Destino, Dest),
-    robot_path(Or, Dest, LLigMelhor, LPisMelhor, CamF),
-
-    cells_lists_to_json_object(CamF, LPisMelhor, LLigMelhor, JsonObject),
-
-    reply_json(JsonObject, [json_object(dict)]),
-    !.
 
 % Converte a estrutura cel para uma lista
 cel_to_list(cel(X, Y), [X, Y]).
@@ -596,8 +608,7 @@ cria_grafo_lin(Col,Lin,Piso):-
 
 % - aStar(Orig,Dest,Cam,Custo,Piso)
 aStar(Orig,Dest,Cam,Custo,Piso):-
-    aStar2(Dest,[(_,0,[Orig])],Cam,Custo,Piso),
-    %write('Caminho'),write(Cam),nl.
+    aStar2(Dest,[(_,0,[Orig])],Cam,Custo,Piso).
 
 % Se for preciso apenas o melhor caminho, colocar cut a seguir ao reverse.
 aStar2(Dest,[(_,Custo,[Dest|T])|_],Cam,Custo,Piso):-
@@ -641,31 +652,36 @@ caminho_completo(Point, Point2, [],[Path1]):-
 	ponto_acesso(Point,PisoOr,Orig),
 	ponto_acesso(Point2,PisoDest,Dest),
 	 (PisoOr = PisoDest ->
-			write('==========================='), nl,
-			write('Point1: '), write(Point), nl,
-			write('PisoOr: '), write(PisoOr), nl,
-			write('Orig: '), write(Orig), nl,
-			write('PointX: '), write(Point2), nl,
-			write('PisoDest: '), write(PisoDest), nl,
-			write('Dest: '), write(Dest), nl,
-			write('Same floor!'), nl,
-			write('==========================='), nl,
+            %writeln('entrou neste'),
+			%write('==========================='), nl,
+			%write('Point1: '), write(Point), nl,
+			%write('PisoOr: '), write(PisoOr), nl,
+			%write('Orig: '), write(Orig), nl,
+			%write('PointX: '), write(Point2), nl,
+			%write('PisoDest: '), write(PisoDest), nl,
+			%write('Dest: '), write(Dest), nl,
+			%write('Same floor!'), nl,
+			%write('==========================='), nl,
             aStar(Orig, Dest, Path1, Custo, PisoOr)
+            %write('Path1: '), write(Path1), nl
 			%Path1 = [a], Custo = 0,
             %caminho_completo(Point2, Point2, [], Path1)
         ;
 			(ponto_acesso(Point,PisoDest,New)->
-			write('==========================='), nl,
-			write('Point1: '), write(Point), nl,
-			write('PisoOr: '), write(PisoDest), nl,
-			write('Orig: '), write(New), nl,
-			write('PointX: '), write(Point2), nl,
-			write('PisoDest: '), write(PisoDest), nl,
-			write('Dest: '), write(Dest), nl,
-			write('Same floor!'), nl,
-			write('==========================='), nl,
+			%write('==========================='), nl,
+			%write('Point1: '), write(Point), nl,
+			%write('PisoOr: '), write(PisoDest), nl,
+			%write('Orig: '), write(New), nl,
+			%write('PointX: '), write(Point2), nl,
+			%write('PisoDest: '), write(PisoDest), nl,
+			%write('Dest: '), write(Dest), nl,
+			%write('Same floor!'), nl,
+			%write('==========================='), nl,
 			%Path1 = [b], Custo = 1,
+            %write('entrou antes do aStar'), nl,
+            %write(aStar(New, Dest, Path1, Custo, PisoDest)), nl,
 			aStar(New, Dest, Path1, Custo, PisoDest)
+            %write('Path1: '), write(Path1), nl
             %caminho_completo(Point2, Point2, [], Path1)
 			);
             Path1 = [C], Custo = 1
@@ -680,31 +696,33 @@ caminho_completo(Point1, Point2, [PointX|T], [Path1|RestPath]) :-
 		caminho_completo(PointX, Point2, T, RestPath)	
     ;
         (PisoOr = PisoDest ->
-			write('==========================='), nl,
-			write('Point1: '), write(Point1), nl,
-			write('PisoOr: '), write(PisoOr), nl,
-			write('Orig: '), write(Orig), nl,
-			write('PointX: '), write(PointX), nl,
-			write('PisoDest: '), write(PisoDest), nl,
-			write('Dest: '), write(Dest), nl,
-			write('Same floor!'), nl,
-			write('==========================='), nl,
+			%write('==========================='), nl,
+			%write('Point1: '), write(Point1), nl,
+			%write('PisoOr: '), write(PisoOr), nl,
+			%write('Orig: '), write(Orig), nl,
+			%write('PointX: '), write(PointX), nl,
+			%write('PisoDest: '), write(PisoDest), nl,
+			%write('Dest: '), write(Dest), nl,
+			%write('Same floor!'), nl,
+			%write('==========================='), nl,
             aStar(Orig, Dest, Path1, Custo, PisoOr),
 			%Path1 = [a], Custo = 0,
+            %write('Path1: '), write(Path1), nl,
             caminho_completo(PointX, Point2, T, RestPath)
         ;
 			(ponto_acesso(Point1,PisoDest,New)->
-			write('==========================='), nl,
-			write('Point1: '), write(Point1), nl,
-			write('PisoOr: '), write(PisoDest), nl,
-			write('Orig: '), write(New), nl,
-			write('PointX: '), write(PointX), nl,
-			write('PisoDest: '), write(PisoDest), nl,
-			write('Dest: '), write(Dest), nl,
-			write('Same floor!'), nl,
-			write('==========================='), nl,
+			%write('==========================='), nl,
+			%write('Point1: '), write(Point1), nl,
+			%write('PisoOr: '), write(PisoDest), nl,
+			%write('Orig: '), write(New), nl,
+			%write('PointX: '), write(PointX), nl,
+			%write('PisoDest: '), write(PisoDest), nl,
+			%write('Dest: '), write(Dest), nl,
+			%write('Same floor!'), nl,
+			%write('==========================='), nl,
 			%Path1 = [b], Custo = 1,
 			aStar(New, Dest, Path1, Custo, PisoDest),
+            %write('Path1: '), write(Path1), nl,
             caminho_completo(PointX, Point2, T, RestPath)
 			);
             Path1 = [C], Custo = 1,
@@ -716,9 +734,11 @@ caminho_completo(Point1, Point2, [PointX|T], [Path1|RestPath]) :-
 % RobotPath -> caminho entre dois pontos de acesso
 
 robot_path(P1,P2, LLigMelhor, LPisMelhor, List) :-
-	ponto_acesso(P1,PisoOr,Orig),
+	ponto_acesso(P1,PisoOr,Orig),!,
 	ponto_acesso(P2,PisoDest,Dest),
 	melhor_caminho_pisos(PisoOr,PisoDest,LLigMelhor, LPisMelhor),
+    write('LLigMelhor: '), write(LLigMelhor), nl,
+    write('LPisMelhor: '), write(LPisMelhor), nl,
 	caminho_completo(P1,P2, LLigMelhor, List).
 
 %===========================================================================================================
@@ -735,5 +755,5 @@ count_nodes():-
 
 write_nodes(Floor):-
     findall(node(X, Y, Z, Floor), node(X, Y, Z, Floor), Nodes),
-    write('Length: '), length(Nodes, Length), write(Length), nl,
-    write(Nodes), nl.
+    write('Length: '), length(Nodes, Length), write(Length), nl.
+    %write(Nodes), nl.
