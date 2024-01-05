@@ -747,7 +747,7 @@ print_all_edges(Graph) :-
 :-dynamic prob_cruzamento/1.
 :-dynamic prob_mutacao/1.
 :-dynamic estabilizacao_solucao/1.
-:-dynamic melhor_sequencia/1.
+:-dynamic melhor_sequencia/2.
 :-dynamic tempo_max/1.
 :-dynamic entre_tarefas/3.
 :-dynamic inicio/1.
@@ -1031,7 +1031,7 @@ entre_tarefas(t10,t9,5).
 
 
 % tarefas(NTarefas).
-tarefas(5).
+tarefas(10).
 
 % parameterizacao
 inicializa:-
